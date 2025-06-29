@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar"; // Corrected typo
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./components/sidebar";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Add from "./pages/Add";
 import List from "./pages/List";

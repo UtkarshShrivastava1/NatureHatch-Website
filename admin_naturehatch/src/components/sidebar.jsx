@@ -96,7 +96,9 @@ const Sidebar = () => {
             </div>
             <div
               className={`transition-all duration-300 ease-in-out overflow-hidden whitespace-nowrap
-              ${collapsed && !isMobile ? "w-0 opacity-0" : "w-auto opacity-100"}`}
+              ${
+                collapsed && !isMobile ? "w-0 opacity-0" : "w-auto opacity-100"
+              }`}
             >
               <span className="font-medium">{item.name}</span>
             </div>
