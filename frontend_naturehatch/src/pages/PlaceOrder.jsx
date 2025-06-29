@@ -3,7 +3,7 @@ import Title from "../components/Title";
 import { ShopContext } from "../context/ShopContext";
 // import { useNavigate } from "react-router-dom";
 import CartTotal from "../components/CartTotal";
-import { currency } from "../../../admin_naturehatch/src/App";
+const currency = "₹";
 
 const PlaceOrder = () => {
   // const navigate = useNavigate();
