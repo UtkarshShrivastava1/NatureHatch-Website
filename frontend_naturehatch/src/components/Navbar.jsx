@@ -76,13 +76,11 @@ const Navbar = () => {
 
         {/* Logo */}
         <Link to='/'>
-          <h1 className='text-2xl font-bold text-gray-700'>Nature Hatch</h1>
-          {/* You can replace with logo image if needed */}
-          {/* <img src={assets.logo} alt="Logo" className="w-35" /> */}
+          <h1 className='text-sm  lg:text-2xl font-bold text-gray-700 md:text-xl mr-5\4.5 '>Nature Hatch</h1>
         </Link>
 
         {/* Menu */}
-        <ul className='hidden sm:flex gap-5 text-md font-semibold text-gray-700 md:text-sm'>
+        <ul className='hidden sm:flex gap-5 text-md font-semibold text-gray-700 md:text-sm text-sm '>
           <li className='hover:text-green-500'><NavLink to='/' className={({ isActive }) => isActive ? 'text-green-700' : ''}>HOME</NavLink></li>
 
           <li><NavLink to='/shop' className={({ isActive }) => isActive ? 'text-green-700' : ''}>SHOP</NavLink></li>
@@ -123,52 +121,23 @@ const Navbar = () => {
           <img onClick={() => setShowSearch(true)} src={assets.search_icon} alt="Search" className='w-5 cursor-pointer' />
           
           <div className="relative group">
-   {/* <Link to="/login" className="flex items-center gap-2">          */}
-  <img
-  onClick= { () => token ? null : navigate('/login')}
-    src={assets.profile_icon}
-    alt="Profile"
-    className="w-5  cursor-pointer"
-  />
-    {/* </Link> */}
+            <img
+              onClick= { () => token ? null : navigate('/login')}
+              src={assets.profile_icon}
+              alt="Profile"
+              className="w-5  cursor-pointer"
+            />
 
-    {token && 
-    <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg z-10 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-300">
-    <ul className="py-2 text-sm text-gray-700">
-      <li>
-        <a
-          href="/profile"
-          className="block px-4 py-2 hover:bg-gray-100"
-        >
-          My Profile
-        </a>
-      </li>
-      <li>
-        <Link
-        // onClick={() => navigate('/orders')}
-         to="/orders"
-          className="block px-4 py-2 hover:bg-gray-100"
-        >
-          My Orders
-        </Link>
-      </li>
-      <li>
-        <button
-          onClick={logout}
-          className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-        >
-          Log Out
-        </button>
-      </li>
-    </ul>
-  </div>
-        
-      }
-
-  
-</div>
-
-
+            {token && 
+              <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg z-10 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-300">
+                <ul className="py-2 text-sm text-gray-700">
+                  <li><a href="/profile" className="block px-4 py-2 hover:bg-gray-100">My Profile</a></li>
+                  <li><Link to="/orders" className="block px-4 py-2 hover:bg-gray-100">My Orders</Link></li>
+                  <li><button onClick={logout} className="block w-full text-left px-4 py-2 hover:bg-gray-100">Log Out</button></li>
+                </ul>
+              </div>
+            }
+          </div>
 
           <Link to='/cart' className='relative'>
             <img src={assets.cart_icon} alt="Cart" className='w-5 min-w-5' />
@@ -195,6 +164,7 @@ const Navbar = () => {
 
           {/* Mobile Nav */}
           <NavLink onClick={() => setVisible(false)} to='/' className='block py-2 px-6 border-b'>Home</NavLink>
+           <NavLink onClick={() => setVisible(false)} to='/shop' className='block py-2 px-6 border-b'>Shop</NavLink>
           <NavLink onClick={() => setVisible(false)} to='/blogs' className='block py-2 px-6 border-b'>Blogs</NavLink>
           <NavLink onClick={() => setVisible(false)} to='/blogs' className='block py-2 px-6 border-b'>Why Choose Us?</NavLink>
           <NavLink onClick={() => setVisible(false)} to='/about' className='block py-2 px-6 border-b'>About</NavLink>

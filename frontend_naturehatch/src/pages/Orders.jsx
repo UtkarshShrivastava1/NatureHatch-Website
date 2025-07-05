@@ -1,120 +1,106 @@
-// import React, { useContext } from "react";
-// import { ShopContext } from "../context/ShopContext";
-// import Title from "../components/Title";
-
-// const Orders = () => {
-//   const { products, currency, cartItem, updateQuantity, navigate } =
-//     useContext(ShopContext);
-//   return (
-//     <div className="border-t pt-16 mb-52">
-//       <div className="text-2xl mb-3">
-//         <Title text1={"YOUR"} text2={"ORDERS"} />
-//       </div>
-
-//       <div>
-//         {products.slice(1, 4).map((item, index) => (
-//           <div
-//             key={index}
-//             className="py-4 border-t border-b text-gray-700 grid grid-cols-[4fr_0.5fr_0.5fr] sm:grid-cols-[4fr_2fr_0.5fr] items-center gap-4 shadow-lg mt-4"
-//           >
-//             <div className="flex items-start gap-6 text-sm">
-//               <img
-//                 className="w-16 sm:w-20 rounded-b-lg"
-//                 src={item.image[0]}
-//                 alt={item.name}
-//               />
-
-//               <div>
-//                 <p className="font-medium sm:text-base">{item.name}</p>
-//                 <div className="flex items-center gap-6  mt-2 text-base">
-//                   <p className="text-gray-500 text-lg">
-//                     {currency}
-//                     {item.price}
-//                   </p>
-//                   <p className="text-gray-500 text-lg">Quantity : 1</p>
-//                   <p className="px-2 sm:px-3 sm:py-1 border bg-slate-50 max-w-20 rounded-sm">
-//                     size : M{" "}
-//                   </p>
-//                   <p className="mt-2">
-//                     Date :<span className="text-gray-500">2023-10-01</span>{" "}
-//                   </p>
-//                 </div>
-//               </div>
-//               <div className="md:w-1/2 flex justify-between ">
-//                 <div className=" flex items-center gap-2">
-//                   <p className="min-w-2 h-2 rounded-full bg-green-500"></p>
-//                   <p className="md:text-base text-lg">Delivered</p>
-//                 </div>
-//                 <button className="text-gray-500 text-sm border px-2 py-1 rounded-md hover:bg-gray-200 ">
-//                   Track Order
-//                 </button>
-//               </div>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Orders;
 import React, { useContext } from "react";
 import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
 
 const Orders = () => {
-  const { products, currency } = useContext(ShopContext);
+  const { orders, currency, products } = useContext(ShopContext);
+
+  const getProductDetails = (productId) => {
+    return products.find((p) => p._id === productId);
+  };
 
   return (
-    <div className="border-t pt-16 mb-52">
-      <div className="text-2xl mb-3">
+    <div className="border-t pt-16 mb-52 px-4 sm:px-8">
+      <div className="text-2xl mb-6">
         <Title text1={"YOUR"} text2={"ORDERS"} />
       </div>
 
-      <div>
-        {products.slice(1, 4).map((item, index) => (
-          <div
-            key={index}
-            className="py-4 border-t border-b text-gray-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-lg mt-4"
-          >
-            {/* Left section: Product details */}
-            <div className="flex items-start gap-4 text-sm">
-              <img
-                className="w-16 sm:w-20 rounded-b-lg"
-                src={item.imageURL}
-                alt={item.name}
-              />
-
-              <div>
-                <p className="font-medium sm:text-base">{item.productname}</p>
-                <div className="flex flex-wrap items-center gap-4 mt-2 text-base">
-                  <p className="text-gray-500 text-lg">
-                    {currency}
-                    {item.price}
-                  </p>
-                  <p className="text-gray-500 text-lg">Quantity: {item.quantity}</p>
-                  <p className="px-2 sm:px-3 sm:py-1 border bg-slate-50 max-w-20 rounded-sm">
-                    Size: M
-                  </p>
-                  <p>
-                    Date: <span className="text-gray-500">{new Date(item.date).toDateString}</span>
-                  </p>
-                </div>
+      <div className="space-y-6">
+        {orders.length === 0 ? (
+          <p className="text-gray-600 text-lg">No orders found.</p>
+        ) : (
+          orders.map((order, index) => (
+            <div
+              key={order._id || index}
+              className="p-6 border rounded-xl shadow-sm bg-white hover:shadow-md transition-all duration-300 space-y-4"
+            >
+              <div className="flex justify-between items-center">
+                <div className="text-sm text-gray-600"></div>
               </div>
-            </div>
 
-            {/* Right section: Status and action */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                <p className="text-lg sm:text-base">Delivered</p>
-              </div>
-              <button className="text-gray-500 text-sm border px-3 py-1 rounded-md hover:bg-gray-200">
-                Track Order
-              </button>
+              {order.products.map((prod, i) => {
+                const product = getProductDetails(prod.productId);
+                return (
+                  <div
+                    key={i}
+                    className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between border-t pt-4"
+                  >
+                    <div className="flex gap-4 items-start">
+                      <img
+                        src={product?.imageURL || "/placeholder.png"}
+                        alt={product?.productname || "Product"}
+                        className="w-20 h-20 object-cover rounded-lg"
+                      />
+                      <div>
+                        <p className="font-semibold text-gray-800">
+                          {product?.productname || "Product Name"}
+                        </p>
+                        <div className="flex flex-wrap gap-4 mt-2 text-gray-600 text-sm">
+                          <p>
+                            {currency}
+                            {product?.price || "0"}
+                          </p>
+                          <p>Qty: {prod.quantity}</p>
+                        </div>
+                        <p>Date: {new Date(order.orderDate).toDateString()}</p>
+                      </div>
+                    </div>
+
+                    <button className="text-sm sm:text-base border px-4 py-1.5 rounded-md bg-white hover:bg-gray-100 text-gray-700 transition">
+                      Track Order
+                    </button>
+                  </div>
+                );
+              })}
+
+              {/* Order Summary */}
+             <div className="pt-4 border-t text-sm text-gray-700 flex flex-col sm:flex-row sm:justify-between gap-4 sm:gap-0">
+  <p className="flex-1">
+    <span className="font-semibold">Shipping Address:</span>{" "}
+    {order.shippingAddress}
+  </p>
+
+  <div
+    className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium border w-fit mx-auto sm:mx-0
+      ${
+        order.status === "Delivered"
+          ? "bg-green-50 border-green-500 text-green-700"
+          : order.status === "Pending"
+          ? "bg-yellow-50 border-yellow-500 text-yellow-700"
+          : "bg-gray-100 border-gray-400 text-gray-700"
+      }`}
+  >
+    <span
+      className={`w-2.5 h-2.5 rounded-full ${
+        order.status === "Delivered"
+          ? "bg-green-500"
+          : order.status === "Pending"
+          ? "bg-yellow-500"
+          : "bg-gray-500"
+      }`}
+    />
+    <p className="rounded-full">{order.status}</p>
+  </div>
+
+  <p className="flex-1 sm:text-right">
+    <span className="font-semibold">Total:</span> {currency}
+    {order.totalAmount}
+  </p>
+</div>
+
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

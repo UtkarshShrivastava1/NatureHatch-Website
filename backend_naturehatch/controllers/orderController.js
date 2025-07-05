@@ -264,8 +264,24 @@ const getOrderById = async (req, res) => {
   }
 };
 
+const placeOrderByPaypal = async (req, res) =>
+{    
+
+
+
+
+
+
+
+
+
+
+
+}
+
 module.exports = {
   createOrder,
   getAllOrders,
   getOrderById,
+ placeOrderByPaypal
 };

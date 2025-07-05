@@ -3,7 +3,7 @@ import { ShopContext } from '../context/ShopContext';
 import Title from './Title';
 import { motion } from 'framer-motion';
 import { Star, ShoppingBag, Heart, Leaf, Egg, ChefHat, Award, Sparkles, Clock, Check } from 'lucide-react';
-import PorductItem from './ProductItem';
+import ProductItem from './ProductItem';
 
 const PremiumEggCollection = () => {
   const { products, addToCart } = useContext(ShopContext);
@@ -12,7 +12,6 @@ const PremiumEggCollection = () => {
   const [activeCategory, setActiveCategory] = useState('All');
 
   useEffect(() => {
-    // In a real app, you would fetch egg products from your API
     setEggProducts(products.slice(0, 10));
   }, [products]);
 
@@ -20,74 +19,25 @@ const PremiumEggCollection = () => {
 
   const filterByCategory = (category) => {
     setActiveCategory(category);
-    // In a real app, you would filter products here
   };
 
-  // Egg types for demonstration - updated based on brochure
-  const eggTypes = [
-    'Organic Brown', 'Free-Range White', 'Omega-3 Enriched', 'Farm Fresh',
-    'Pasture-Raised', 'Vitamin B12 Rich', 'Selenium Enriched', 'A&D Enriched',
-    'Calcium Fortified', 'Golden Yolk'
-  ];
-  
-  // Farm sources for demonstration - based on brochure
-  const farmSources = [
-    'Nature Hatch Organic', 'Heritage Hens', 'Green Valley Poultry', 'Free Range PvT. Ltd',
-    'Wholesome & Fresh Farm', 'Golden Yolk Ranch', 'Nutritional Value Farm', 'Farm Fresh & Nutritious',
-    'Feather & Nest', 'Nature Hatch Family Farm'
-  ];
-
-  // Benefits from brochure
-  const eggBenefits = [
-    ['Rich in protein', 'Contains all 9 essential amino acids', 'Higher omega-3 content'],
-    ['Excellent source of vitamins', 'Rich in selenium', 'Supports eye health'],
-    ['Vitamin B12 for energy', 'Contains zinc & iron', 'Supports immunity'],
-    ['Rich in antioxidants', 'Selenium enriched', 'Essential for cell function'],
-    ['Supports brain health', 'Fresh daily', 'Nutritional powerhouse'],
-    ['Riboflavin for energy', 'Contains vitamin A', 'Perfect protein balance'],
-    ['Source of vitamin D', 'Supports bone health', 'Fresh from the farm'],
-    ['Essential nutrients', 'Locally sourced', 'From happy hens'],
-    ['Zero antibiotics', 'Humane farming', 'Environment-friendly'],
-    ['Rich flavor', 'Nutritional benefits', 'Sustainable farming']
-  ];
-
-  // Updated egg labels based on brochure
-  const eggLabels = [
-    { name: 'ORGANIC', class: 'from-green-600 to-green-500' },
-    { name: 'FREE-RANGE', class: 'from-amber-500 to-yellow-500' },
-    { name: 'OMEGA-3', class: 'from-blue-500 to-teal-500' },
-    { name: 'VITAMIN RICH', class: 'from-purple-500 to-pink-500' },
-    { name: 'FRESH 48HR', class: 'from-green-500 to-teal-400' }
-  ];
-
-
   return (
-    <div className="relative py-16 overflow-hidden">
-      {/* Background Elements - using green from brochure */}
+    <div className="relative py-16 px-4 sm:px-6 md:px-10 lg:px-20 xl:px-28 2xl:px-36 overflow-hidden">
       <div className="absolute inset-0 bg-white z-0"></div>
-      {/* gradient-to-br from-green-800 via-green-700 to-green-600 */}
       <div className="absolute top-40 left-10 w-64 h-64 rounded-full bg-green-500 filter blur-3xl opacity-20 animate-pulse"></div>
       <div className="absolute bottom-40 right-10 w-80 h-80 rounded-full bg-yellow-400 filter blur-3xl opacity-20 animate-pulse"></div>
-      
-      {/* Farm illustration as SVG background element */}
-      <div className="absolute opacity-5 right-0 top-0 w-full h-full">
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
-          <path d="M10,30 Q30,5 50,30 T90,30 L90,90 L10,90 Z" fill="white" />
-        </svg>
-      </div>
-      
-      <div className="container relative mx-auto px-4 z-10">
-        {/* Logo Badge */}
+
+      <div className="container relative mx-auto z-10">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="absolute top-0 right-8 w-20 h-20 md:w-24 md:h-24"
+          className="absolute top-0 right-4 sm:right-8 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24"
         >
           <div className="relative w-full h-full">
             <div className="absolute inset-0 rounded-full bg-white shadow-lg flex items-center justify-center p-2">
               <div className="rounded-full border-4 border-green-600 flex items-center justify-center w-full h-full relative">
-                <Egg className="text-balck w-8 h-8 absolute" />
+                <Egg className="text-black w-6 sm:w-8 h-6 sm:h-8 absolute" />
                 <div className="absolute w-full h-full rounded-full border-2 border-dashed border-green-600 animate-spin-slow" style={{ animationDuration: '15s' }}></div>
               </div>
             </div>
@@ -96,8 +46,7 @@ const PremiumEggCollection = () => {
             </div>
           </div>
         </motion.div>
-        
-        {/* Animated Header Section */}
+
         <motion.div 
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -107,63 +56,55 @@ const PremiumEggCollection = () => {
           <div className="inline-block relative">
             <Title text1={'NATURE'} text2={'HATCH'} />
             <motion.div 
-              className="absolute -top-6 -right-6 w-12 h-12 text-yellow-400"
+              className="absolute -top-6 -right-6 w-10 h-10 sm:w-12 sm:h-12 text-yellow-400"
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
             >
               <Sparkles className="w-full h-full" />
             </motion.div>
           </div>
-          
+
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.8 }}
             className="mt-2 mb-6 flex justify-center"
           >
-            <div className="px-6 py-1 rounded-full border-2 border-yellow-400 text-yellow-300 flex items-center">
-              <span className="uppercase tracking-wider font-bold text-lg">Organic Free Range</span>
+            <div className="px-4 sm:px-6 py-1 rounded-full border-2 border-yellow-400 text-yellow-300 flex items-center">
+              <span className="uppercase tracking-wider font-bold text-sm sm:text-lg">Organic Free Range</span>
             </div>
           </motion.div>
-          
+
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="mt-4 text-balck max-w-2xl mx-auto text-lg font-light"
+            className="mt-4 text-black max-w-2xl mx-auto text-base sm:text-lg font-light"
           >
             "Twice the Omega-3's, Twice More Vitamin E, One True Beta Carotene"
           </motion.p>
         </motion.div>
-        
-        {/* Benefit Badges - from brochure */}
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="flex flex-wrap justify-center gap-6 mb-12"
+          className="flex flex-wrap justify-center gap-4 sm:gap-6 mb-12"
         >
-          {[
-            { icon: <Egg />, text: "The Power to Choose" },
-            { icon: <Check />, text: "Local Support" },
-            { icon: <Clock />, text: "Undeniable Freshness" },  
-            { icon: <Award />, text: "Flavor and Color" },
-            { icon: <Leaf />, text: "Nutritional Benefits" }
-          ].map((item, i) => (
+          {[{ icon: <Egg />, text: "The Power to Choose" }, { icon: <Check />, text: "Local Support" }, { icon: <Clock />, text: "Undeniable Freshness" },  { icon: <Award />, text: "Flavor and Color" }, { icon: <Leaf />, text: "Nutritional Benefits" }].map((item, i) => (
             <motion.div
               key={i}
               whileHover={{ y: -5 }}
-              className="flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-white/20"
+              className="flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-xl p-3 sm:p-4 shadow-lg border border-white/20 w-28 sm:w-32"
             >
-              <div className="w-10 h-10 rounded-full bg-yellow-400 text-green-800 flex items-center justify-center mb-2">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-yellow-400 text-green-800 flex items-center justify-center mb-2">
                 {item.icon}
               </div>
-              <span className="text-balck text-sm font-medium">{item.text}</span>
+              <span className="text-black text-xs sm:text-sm font-medium text-center">{item.text}</span>
             </motion.div>
           ))}
         </motion.div>
-        
-        {/* Category Filter Pills */}
+
         <motion.div 
           className="flex flex-wrap justify-center gap-3 mb-10"
           initial={{ opacity: 0, y: 20 }}
@@ -174,10 +115,10 @@ const PremiumEggCollection = () => {
             <button
               key={index}
               onClick={() => filterByCategory(category)}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
+              className={`px-4 py-1 sm:px-6 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
                 activeCategory === category
                   ? 'bg-yellow-400 text-green-800 shadow-lg'
-                  : 'bg-white/10 backdrop-blur-sm text-balck hover:bg-white/20 hover:shadow-md'
+                  : 'bg-white/10 backdrop-blur-sm text-black hover:bg-white/20 hover:shadow-md'
               }`}
             >
               {category === 'Organic' && <Leaf className="inline w-4 h-4 mr-1" />}
@@ -189,21 +130,23 @@ const PremiumEggCollection = () => {
           ))}
         </motion.div>
 
-        {/* Product Grid with Effects - styled like Nature Hatch brochure */}
         <motion.div 
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6"
           initial="hidden"
           animate="visible"
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: { staggerChildren: 0.1 }
-            }
-          }}
+          variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } }}
         >
-          {eggProducts.map((item, index) => (
-           <PorductItem key={index} id={item._id} image={item.imageURL} name={item.productname} price={item.price}/>
+          {eggProducts.map((product) => (
+            <ProductItem
+              key={product._id}
+              id={product._id}
+              image={product.imageURL}
+              name={product.productname}
+              price={product.price}
+              rating={product.averageRating}
+              reviews={product.reviews?.length || 0}
+              isNew={product.isNew}
+            />
           ))}
         </motion.div>
         

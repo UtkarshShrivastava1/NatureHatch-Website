@@ -4,8 +4,9 @@ import Title from '../components/Title';
 import { assets } from '../assets/frontend_assets/assets';
 import CartTotal from '../components/CartTotal';
 import axios from 'axios';
+import Stars from '../components/Stars';
 
-const backendUrl = 'http://localhost:5000'; // Adjust as needed
+const backendUrl = 'http://localhost:5000';
 
 const Cart = () => {
   const { products, currency, cartItem, updateQuantity, navigate, removeFromCart } = useContext(ShopContext);
@@ -22,11 +23,13 @@ const Cart = () => {
 
         const fetchedCart = response.data.cart.map((item) => ({
           _id: item.productId._id,
-          name: item.productId.productname,
+          productname: item.productId.productname,
           price: item.productId.price,
           imageURL: item.productId.imageURL,
           size: item.size,
           quantity: item.quantity,
+          rating: item.productId.averageRating || 0,
+          reviews: item.productId.reviews?.length || 0,
         }));
 
         setCartData(fetchedCart);
@@ -39,149 +42,104 @@ const Cart = () => {
   }, []);
 
   return (
-    <div className="border-t pt-14 px-10">
-      <div className="text-2xl mb-3">
-        <Title text1={'YOUR'} text2={'CART'} />
+    <div className="border-t pt-14 px-4 sm:px-10">
+      <div className="text-2xl mb-4">
+        <Title text1="YOUR" text2="CART" />
       </div>
 
       <div>
-        {cartData.map((item, index) => {
-          const productData = products.find((product) => product._id === item._id) || item;
-
-          return (
-            <div
-              key={index}
-              className="py-4 border-b text-gray-700 grid grid-cols-[4fr_0.5fr_0.5fr] sm:grid-cols-[4fr_2fr_0.5fr] items-center gap-4 shadow-lg"
-            >
-              <div className="flex items-start gap-6">
-                <img
-                  className="w-16 sm:w-20 rounded-b-lg"
-                  src={productData.imageURL || assets.defaultImage}
-                  alt={productData.name}
-                />
-                <div>
-                  <p className="font-medium">{productData.productname}</p>
-                  <p className="text-gray-500 text-md">
-                    {currency}
-                    {productData.price}
-                  </p>
-                  <p className="px-2 sm:px-3 sm:py-1 border bg-slate-50 max-w-10">10</p>
-                </div>
+        {cartData.map((item, index) => (
+          <div
+            key={index}
+            className="py-6 border-b grid grid-cols-[1fr] sm:grid-cols-[4fr_1.5fr_1fr] items-center gap-4 text-gray-700 shadow-sm"
+          >
+            {/* Product Info */}
+            <div className="flex gap-4 sm:gap-6 items-start">
+              <img
+                className="w-16 sm:w-20 h-20 object-cover rounded-lg"
+                src={item.imageURL || assets.defaultImage}
+                alt={item.productname}
+              />
+              <div className="flex flex-col justify-between">
+                <p className="font-medium text-base sm:text-lg">{item.productname}</p>
+                <p className="text-sm text-gray-500 mt-1">{currency}{item.price}</p>
+                <p className="text-xs text-gray-400 mt-1 font-semibold ">Qunatity : <span className='  font-black '>{item.quantity}</span></p>
               </div>
+            </div>
 
-              {/* <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => {
-                    const newQty = item.quantity - 1;
-                    updateQuantity(item._id, item.size, newQty);
-                    if (newQty <= 0) {
-                      setCartData((prev) => prev.filter((_, idx) => idx !== index));
-                    } else {
-                      setCartData((prev) =>
-                        prev.map((cartItem, idx) =>
-                          idx === index ? { ...cartItem, quantity: newQty } : cartItem
-                        )
-                      );
-                    }
-                  }}
-                  className="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded text-sm"
-                >
-                  -
-                </button>
+            {/* Rating */}
+            {/* Visible on mobile only */}
+<div className="lg:block md:block hidden mt-2">
+  <Stars stars={item.rating} />
+  <span className="text-xs text-gray-500 mt-1">({item.reviews} Reviews)</span>
+</div>
 
-                <span className="min-w-[24px] text-center">{item.quantity}</span>
 
-                <button
-                  onClick={() => {
-                    const newQty = item.quantity + 1;
-                    updateQuantity(item._id, item.size, newQty);
+            {/* Controls */}
+            <div className="flex items-center justify-start sm:justify-end space-x-2">
+              {/* Quantity Buttons */}
+              <button
+                onClick={() => {
+                  const newQty = item.quantity - 1;
+                  updateQuantity(item._id, item.size, newQty);
+                  if (newQty <= 0) {
+                    setCartData((prev) => prev.filter((_, idx) => idx !== index));
+                  } else {
                     setCartData((prev) =>
                       prev.map((cartItem, idx) =>
                         idx === index ? { ...cartItem, quantity: newQty } : cartItem
                       )
                     );
-                  }}
-                  className="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded text-sm"
-                >
-                  +
-                </button>
-              </div> */}
+                  }
+                }}
+                className="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded text-sm"
+              >
+                -
+              </button>
 
-<div className="flex items-center space-x-2">
-  <button
-    onClick={() => {
-      const newQty = item.quantity - 1;
-      updateQuantity(item._id, item.size, newQty);
-      if (newQty <= 0) {
-        setCartData((prev) => prev.filter((_, idx) => idx !== index));
-      } else {
-        setCartData((prev) =>
-          prev.map((cartItem, idx) =>
-            idx === index ? { ...cartItem, quantity: newQty } : cartItem
-          )
-        );
-      }
-    }}
-    className="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded text-sm"
-  >
-    -
-  </button>
+              <span className="min-w-[24px] text-center">{item.quantity}</span>
 
-  <span className="min-w-[24px] text-center">{item.quantity}</span>
+              <button
+                onClick={() => {
+                  const newQty = item.quantity + 1;
+                  updateQuantity(item._id, item.size, newQty);
+                  setCartData((prev) =>
+                    prev.map((cartItem, idx) =>
+                      idx === index ? { ...cartItem, quantity: newQty } : cartItem
+                    )
+                  );
+                }}
+                className="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded text-sm"
+              >
+                +
+              </button>
 
-  <button
-    onClick={() => {
-      const newQty = item.quantity + 1;
-      updateQuantity(item._id, item.size, newQty);
-      setCartData((prev) =>
-        prev.map((cartItem, idx) =>
-          idx === index ? { ...cartItem, quantity: newQty } : cartItem
-        )
-      );
-    }}
-    className="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded text-sm"
-  >
-    +
-  </button>
-
-  <button
-    onClick={() => {
-      removeFromCart(item._id);
-      setCartData((prev) => prev.filter((_, idx) => idx !== index));
-    }}
-    className="text-red-600 hover:text-red-800 ml-2 text-3xl cursor-pointer"
-    title="Remove item"
-  >
-    🗑
-  </button>
-</div>
-
-              {/* <button
-    onClick={() => {
-      removeFromCart(item._id);
-      setCartData((prev) => prev.filter((_, idx) => idx !== index));
-    }}
-    className="text-red-600 hover:text-red-800 ml-2 text-3xl cursor-pointer"
-
-    title="Remove item"
-  >
-    🗑
-  </button> */}
-
+              {/* Remove */}
+              <button
+                onClick={() => {
+                  removeFromCart(item._id);
+                  setCartData((prev) => prev.filter((_, idx) => idx !== index));
+                }}
+                className="text-red-600 hover:text-red-800 ml-2 text-2xl cursor-pointer"
+                title="Remove item"
+              >
+                🗑
+              </button>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
 
-      <div className="flex justify-end my-20">
+      {/* Cart Total & Checkout */}
+      <div className="flex justify-end my-16">
         <div className="w-full sm:w-[450px]">
           <CartTotal />
-          <div className="w-full text-end items-center justify-end">
+          <div className="text-end">
             <button
               onClick={() => navigate('/place-order')}
-              className="bg-green-700 text-white text-sm my-8 py-3 cursor-pointer px-4 rounded-2xl"
+              className="bg-green-700 hover:bg-green-800 text-white text-sm my-6 py-3 px-6 rounded-2xl"
             >
-              PROCEED TO CHECK OUT
+              PROCEED TO CHECKOUT
             </button>
           </div>
         </div>

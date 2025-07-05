@@ -15,7 +15,9 @@ const ShopContextProvider = (props) => {
   const [showSearch, setShowSearch] = useState(false);
   const [cartItem, setCartItem] = useState({});
   const [cartCount, setCartCount] = useState(0);
+  const [orders , setOrders] = useState([]);
   const [token, setToken] = useState("");
+
   const navigate = useNavigate();
 
   // ---------------------------
@@ -37,6 +39,7 @@ const ShopContextProvider = (props) => {
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
+    console.log("Stored token:", storedToken);
     if (storedToken) {
       setToken(storedToken);
       fetchCartFromServer(); // <- Fetch cart if token is present
@@ -203,7 +206,32 @@ const ShopContextProvider = (props) => {
     if (storedToken && !token) {
       setToken(storedToken);
     }
-  }, [token]);
+  }, [token,orders]);
+
+
+
+  const fetchOrders = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${backendUrl}/api/order/get-all-orders`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setOrders(response.data);
+    } catch (error) {
+      console.error("Failed to fetch orders:", error.message);
+      toast.error("Failed to load orders");
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      fetchOrders();
+    }
+  }
+, [token]);
+
 
   // ---------------------------
   // Provided Context
@@ -226,6 +254,10 @@ const ShopContextProvider = (props) => {
     setToken,
     navigate,
     removeFromCart
+    ,fetchCartFromServer,
+    fetchOrders,
+    orders,
+    setCartItem
   };
 
   return <ShopContext.Provider value={value}>{props.children}</ShopContext.Provider>;
