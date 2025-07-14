@@ -10,14 +10,11 @@ cloudinary.config({
 
 const createProduct = async (req,res)=>{
     try {
-        // console.log(req.body);
-
-        // console.log(req.files);
+       
         const file = req.files.imageURL;
-        // const file = req.files.image;
-        // console.log(file);
+     
         const result = await cloudinary.uploader.upload(file.tempFilePath,(err,result)=>{
-            // console.log(result.url);
+          
         })
     const { 
         productname,
@@ -27,9 +24,7 @@ const createProduct = async (req,res)=>{
         category,
         // imageURL:result.url,
      } = req.body;
-    // if(!productname || !description || !price || !quantity|| !category){
-    //     return res.status(400).json({message: "All fields are required"});
-    // }
+   
 
     const errors = [];
 

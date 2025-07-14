@@ -168,8 +168,6 @@ function generateInvoice(order, path) {
 const createOrder = async (req, res) => {
   try {
      const userId = req.user.id; 
-    //  console.log('User ID:', userId);
-    // console.log('Request body:', req.body);
     const {  products, totalAmount, shippingAddress, paymentMethod } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {

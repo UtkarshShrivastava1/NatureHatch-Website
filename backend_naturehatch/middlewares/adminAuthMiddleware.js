@@ -11,13 +11,13 @@ const adminAuthMiddleware = async (req, res, next) => {
     
         // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log('Decoded token:', decoded.role);
+        // console.log('Decoded token:', decoded.role);
         // Check if user is admin 
         if (decoded.role !== 'Admin') {
         return res.status(403).json({ msg: 'Access denied' });
         }
         // console.log('Decoded token:', decoded);
-        console.log(decoded.user);
+        // console.log(decoded.user);
     
         // Add user to request object
         req.user = decoded.user;

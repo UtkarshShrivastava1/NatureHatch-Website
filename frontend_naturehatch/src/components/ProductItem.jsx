@@ -7,9 +7,8 @@ function ProductItem({ id, image, name, price, rating, reviews, isNew = true }) 
   const { currency } = useContext(ShopContext);
 
   return (
-    <div className="bg-white p-3 sm:p-4 border border-gray-100 rounded-2xl shadow-md 
-                    hover:shadow-xl hover:border-gray-300 hover:scale-[1.02]
-                    transition-transform duration-300 ease-in-out w-full mb-3.5">
+    <div className="bg-white/20 p-3 rounded-xl flex flex-col items-center shadow-md transition-all hover:scale-[1.02]">
+
 
       <Link to={`/product/${id}`} className="block group">
 
@@ -18,8 +17,7 @@ function ProductItem({ id, image, name, price, rating, reviews, isNew = true }) 
           <img
             src={image}
             alt={name}
-            className="w-full h-48 sm:h-56 md:h-60 lg:h-64 object-cover 
-                       group-hover:scale-110 transition-transform duration-300 ease-in-out"
+            className="w-full h-36 sm:h-44 md:h-52 object-contain rounded-xl"
           />
 
           {/* NEW Badge */}

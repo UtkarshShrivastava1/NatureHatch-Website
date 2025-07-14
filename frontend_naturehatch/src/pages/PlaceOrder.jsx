@@ -78,8 +78,10 @@ const PlaceOrder = () => {
             });
             
          if(response.data)
-          {   setCartItem({});
-        //  console.log("Order response:", response.data);
+          {  
+             setCartItem({});
+               localStorage.removeItem("cartItems"); // clear persisted cart
+       
             alert("Order placed successfully!");
             navigate("/orders");}
             break;

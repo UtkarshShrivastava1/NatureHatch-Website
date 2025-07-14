@@ -26,19 +26,18 @@ const Login = ({ setToken }) => {
     try {
       //use for stop unwanted refresshing
       e.preventDefault();
-      console.log(username, password);
+      if (!username || !password) {
+        toast.error("Please fill in all fields");
+        return;
+      }
 
       const response = await axios.post(
         "http://localhost:5000/api/admin/login",
         { username, password }
       );
-      // const response = await axios.post(`${api}/admin/login`,{username,password});
-      // console.log(response.data);
+   
       toast.success("Login Succesful");
-      console.log(response.data.token);
-      // localStorage.setItem('token', response.data.token);
       setToken(response.data.token);
-
       navigate("/add");
     } catch (error) {
       console.log(error);

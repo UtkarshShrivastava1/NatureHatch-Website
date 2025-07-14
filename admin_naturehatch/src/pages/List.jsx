@@ -31,13 +31,10 @@ const List = ({ token }) => {
   };
 
   const removeProduct = async (id) => {
-     console.log("delete Product" , id);
     try {
       const response = await axios.delete(`http://localhost:5000/api/products/delete-product/${id}`, {
         headers: { token }
       });
-
-      console.log("delete Product" , response);
 
       if (response.data.success) {
         toast.success(response.data.message);

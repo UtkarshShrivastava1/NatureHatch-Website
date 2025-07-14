@@ -30,8 +30,7 @@ export default function Login({token, setToken}) {
           return;
         }
 
-   console.log("Backendurl" , backendUrl);
-        const response = await axios.post(`${backendUrl}/api/user/sign-up`, {
+     const response = await axios.post(`${backendUrl}/api/user/sign-up`, {
           name,
           email,
           phone: phone,
@@ -40,7 +39,7 @@ export default function Login({token, setToken}) {
       {
           withCredentials: true
       });
-      console.log("Response data :",response.data);
+   
         if (response.data.token) {
           // console.log("Registration successful:", response);
          

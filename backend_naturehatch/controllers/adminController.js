@@ -4,16 +4,15 @@ const jwt = require('jsonwebtoken');
 
 const adminLogin = async (req, res) => {
     try {
-        // console.log(req.body);
         const { username, password } = req.body;
-        console.log(username, password);
+
 
         if (!username || !password) {
             return res.status(400).json({ msg: "Please provide username and password" });
         }
 
         const admin = await Admin.findOne({ username });
-        console.log(admin);
+   
         if (!admin) {
             return res.status(401).json({ msg: " UserName Invalid credentials" });
         }

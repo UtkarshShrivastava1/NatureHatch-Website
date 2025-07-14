@@ -50,7 +50,7 @@ const Orders = () => {
                             {currency}
                             {product?.price || "0"}
                           </p>
-                          <p>Qty: {prod.quantity}</p>
+                          <p>Qty: {product.quantity}</p>
                         </div>
                         <p>Date: {new Date(order.orderDate).toDateString()}</p>
                       </div>

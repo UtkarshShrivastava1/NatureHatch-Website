@@ -101,7 +101,7 @@ const sendVerificationEmail = async (email, token) => {
 
 const userSignUp = async (req, res) => {
   try {
-    console.log(req.body);
+
     const { name, email, password, phone } = req.body;
 
     if (!validator.isEmail(email)) {
@@ -429,7 +429,7 @@ const clearItem = async (req, res) => {
 const updateDeliveryInfo = async (req, res) => {
   try {
     const userId = req.userId || req.params.userId; // adjust based on your auth logic
-    console.log("userId", userId);
+   
     if (!userId)
       return res.status(401).json({ message: "User not authenticated" });
 

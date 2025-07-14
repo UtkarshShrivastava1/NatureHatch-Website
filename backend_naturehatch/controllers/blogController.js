@@ -9,16 +9,15 @@ cloudinary.config({
 
 const addBlog = async (req, res) => {
     try {
-        // console.log(req.body);
+       
         const { title, content } = req.body;
-        // console.log(req.files);
-        // const file = req.files.imageURL;
+     
         const file = req.files.image;
         if (!file) {
             return res.status(400).json({ message: "Image is required" });
         }
         const result = await cloudinary.uploader.upload(file.tempFilePath, (err, result) => {
-            // console.log(result.url);
+       
         });
 
         if (!title || !content) {
@@ -89,7 +88,7 @@ const updateBlog = async (req, res) => {
 
         if (file) {
             const result = await cloudinary.uploader.upload(file.tempFilePath, (err, result) => {
-                // console.log(result.url);
+              
             });
             imageUrl = result.url;
         }
