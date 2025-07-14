@@ -129,11 +129,23 @@ const userSignUp = async (req, res) => {
       phone,
     });
     await user.save();
+    // Create a JWT token for auth
+const authToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+  expiresIn: "7d",
+});
 
-    // Send verification email
+// Send verification email
     await sendVerificationEmail(email, token);
 
-    return res.status(201).json({ message: "User saved successfully" });
+return res.status(201).json({
+  message: "User saved successfully",
+  token: authToken, // ✅ send this back
+});
+
+
+    
+
+    // return res.status(201).json({ message: "User saved successfully" });
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ message: error.message });

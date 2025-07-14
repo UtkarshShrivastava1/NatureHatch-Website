@@ -34,7 +34,7 @@ const App = () => {
     <div className="bg-gray-50 min-h-screen">
       <ToastContainer />
       {token === "" ? (
-        <Login setToken={setToken} />
+      <Login token={token} setToken={setToken} />
       ) : (
         <>
           <Navbar setToken={setToken} />
