@@ -23,7 +23,7 @@ const List = ({ token }) => {
         toast.error(response.data.message);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error("Failed to fetch products");
     } finally {
       setLoading(false);
@@ -43,7 +43,7 @@ const List = ({ token }) => {
         toast.error(response.data.message);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error("Failed to delete product");
     }
   };

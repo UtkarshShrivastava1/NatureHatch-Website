@@ -34,7 +34,7 @@ const adminLogin = async (req, res) => {
 
         res.status(200).json({ msg: "Login successful", token, admin: { id: admin._id, username: admin.username, role: admin.role } });
     } catch (error) {
-        console.log(error.message);
+        // console.log(error.message);
         res.status(500).json({ msg: "Internal server error" });
     }
 };

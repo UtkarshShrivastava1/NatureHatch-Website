@@ -21,7 +21,7 @@ function GoogleLoginPage() {
                 navigate("/")
                 
             } catch (error) {
-                console.log(error.message);
+                // console.log(error.message);
                 alert("Failed to log in with Google");
             }
           }}

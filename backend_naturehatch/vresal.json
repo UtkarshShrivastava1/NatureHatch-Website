@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "server.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "server.js" }
+  ]
+}
+{
+  "name": "NatureHatch-Website",
+  "private": true,
+  "version": "1.0.0",
+  "description": "NatureHatch Website",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "mongoose": "^8.16.1",
+    "dotenv": "^16.6.1",
+    "cors": "^2.8.5",
+    "cookie-parser": "^1.4.7",
+    "nodemailer": "^6.10.1",
+    "bcryptjs": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=14.x"
+  }
+}

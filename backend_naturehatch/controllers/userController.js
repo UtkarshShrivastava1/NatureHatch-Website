@@ -1,12 +1,12 @@
- const User = require("../models/userModel");
+const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
 const nodemailer = require("nodemailer");
-const Order = require('../models/order');
-const mongoose = require('mongoose');
+const Order = require("../models/order");
+const mongoose = require("mongoose");
 
-// console.log(process.env.GMAIL_PASS);
+
 
 // Setup Nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -17,42 +17,12 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Send verification email function
-// const sendVerificationEmail = async (email, token) => {
-//   // const verificationLink = `http://localhost:3000/verify?token=${token}`;
-//   const verificationLink = `http://localhost:5000/api/user/verify-email?token=${token}`;
-
-//   const mailOptions = {
-//     from: process.env.GMAIL_USER,
-//     to: email,
-//     subject: "Verify Your Email",
-//     html: `<p>Dear Valued User,</p>
-
-// <p>Thank you for registering with <strong>Nature Hatch</strong>.</p>
-
-// <p>To complete your registration and verify your email address, please click the link below:</p>
-
-// <p>
-//   <a href="${verificationLink}" style="color: #2c7a7b; text-decoration: none;">
-//     ${verificationLink}
-//   </a>
-// </p>
-
-// <p>If you did not create an account with Nature Hatch, please disregard this email.</p>
-
-// <p>Sincerely,<br/>
-// The Nature Hatch Team</p>
-// `,
-//   };
-
-//   await transporter.sendMail(mailOptions);
-//   // console.log("sent");
-// };
-
-
 
 const sendVerificationEmail = async (email, token) => {
-  const verificationLink = `http://localhost:5000/api/user/verify-email?token=${token}`;
+  // const verificationLink = `http://localhost:5000/api/user/verify-email?token=${token}`;
+  const baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+const verificationLink = `${baseUrl}api/user/verify-email?token=${token}`;
+
 
   const htmlContent = `
     <div style="font-family: Arial, sans-serif; background-color: #ffffff; padding: 20px; color: #333;">
@@ -97,11 +67,8 @@ const sendVerificationEmail = async (email, token) => {
   await transporter.sendMail(mailOptions);
 };
 
-
-
 const userSignUp = async (req, res) => {
   try {
-
     const { name, email, password, phone } = req.body;
 
     if (!validator.isEmail(email)) {
@@ -130,24 +97,21 @@ const userSignUp = async (req, res) => {
     });
     await user.save();
     // Create a JWT token for auth
-const authToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-  expiresIn: "7d",
-});
+    const authToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
 
-// Send verification email
+    // Send verification email
     await sendVerificationEmail(email, token);
 
-return res.status(201).json({
-  message: "User saved successfully",
-  token: authToken, // ✅ send this back
-});
-
-
-    
+    return res.status(201).json({
+      message: "User saved successfully",
+      token: authToken, // ✅ send this back
+    });
 
     // return res.status(201).json({ message: "User saved successfully" });
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
     return res.status(500).json({ message: error.message });
   }
 };
@@ -172,7 +136,7 @@ const userVerifyEmail = async (req, res) => {
 
     return res.status(200).json({ message: "Email verified successfully" });
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
     return res.status(400).json({ message: "Invalid or expired token" });
   }
 };
@@ -182,7 +146,7 @@ const userLogin = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
-console.log("user", user);
+    // console.log("user", user);
 
     if (!user) return res.status(400).json({ message: "User not found" });
 
@@ -195,53 +159,37 @@ console.log("user", user);
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    //   expiresIn: "1h",
-    // });
 
     const token = jwt.sign(
-      { id: user._id, role: 'user' },
+      { id: user._id, role: "user" },
       process.env.JWT_SECRET,
-      { expiresIn: '24h' }
+      { expiresIn: "24h" }
     );
 
-    // Set token in cookie
-    // res.cookie("token", token, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === "production",
-    //   maxAge: 3600000,
-    //   sameSite: "strict",
-    // });
+  
 
-    res.cookie('token', token, {
+    res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
     });
 
-    // console.log("Token sent in cookie:", token);
-
-    // return res.status(200).json({
-    //   message: "User logged in successfully",
-    //   token,
-    // });
-
+   
 
     return res.status(200).json({
       success: true,
       token,
       user: {
         id: user._id,
-        email: user.email
-      }
+        email: user.email,
+      },
     });
   } catch (error) {
     console.error("Login Error:", error.message);
     return res.status(500).json({ message: "Server Error" });
   }
 };
-
 
 const userLoginWithGoogle = async (req, res) => {
   try {
@@ -280,29 +228,11 @@ const userLoginWithGoogle = async (req, res) => {
     });
     res.status(200).json({ message: "User logged in successfully" });
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
     return res.status(500).json({ message: "Server Error" });
   }
 };
 
-// const addToCart = async (req, res) => {
-//     try {
-//         console.log(req.body);
-
-//         if (!req.user)
-//             return res.status(401).json({ msg: 'User not authenticated' });
-//         }
-
-//         const {productId, quantity} = req.body;
-//         const user = await User.findByIdAndUpdate(req.user.id, {
-//             $push: { cart: { productId, quantity } }
-//         }, { new: true });
-//         res.json(user);
-//     } catch (error) {
-//         console.log(error.message);
-//         res.status(500).json({msg: 'Server Error'});
-//     }
-// }
 
 const addToCart = async (req, res) => {
   try {
@@ -355,7 +285,6 @@ const getCart = async (req, res) => {
     res.status(500).json({ msg: "Server Error", error: error.message });
   }
 };
-
 
 const updateCart = async (req, res) => {
   try {
@@ -429,7 +358,7 @@ const clearItem = async (req, res) => {
 const updateDeliveryInfo = async (req, res) => {
   try {
     const userId = req.userId || req.params.userId; // adjust based on your auth logic
-   
+
     if (!userId)
       return res.status(401).json({ message: "User not authenticated" });
 
@@ -475,7 +404,6 @@ const updateDeliveryInfo = async (req, res) => {
   }
 };
 
-
 const myOrders = async (req, res) => {
   try {
     const userId = req.userId || req.params.userId || req.body.userId;
@@ -491,14 +419,14 @@ const myOrders = async (req, res) => {
     if (!orders || orders.length === 0)
       return res.status(404).json({ message: "No orders found" });
 
-    return res.status(200).json({ message: "Orders fetched successfully", orders });
+    return res
+      .status(200)
+      .json({ message: "Orders fetched successfully", orders });
   } catch (error) {
     console.error("Fetch Orders Error:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
-
-
 
 module.exports = {
   userSignUp,
@@ -510,5 +438,5 @@ module.exports = {
   updateDeliveryInfo,
   userVerifyEmail,
   getCart,
-  myOrders
+  myOrders,
 };

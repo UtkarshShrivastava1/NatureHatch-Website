@@ -40,7 +40,7 @@ const Login = ({ setToken }) => {
       setToken(response.data.token);
       navigate("/add");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error(error.message);
     }
   };

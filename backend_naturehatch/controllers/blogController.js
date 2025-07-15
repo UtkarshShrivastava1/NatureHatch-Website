@@ -37,7 +37,7 @@ const addBlog = async (req, res) => {
         res.status(201).json("Blog added successfully");
         
     } catch (error) {
-        console.log(error.message);
+        // console.log(error.message);
         res.status(500).json({ message: "Internal server error" });
 
     }
@@ -48,7 +48,7 @@ const getAllBlogs = async (req, res) => {
         const blogs = await Blog.find();
         res.status(200).json(blogs);
     } catch (error) {
-        console.log(error.message);
+        // console.log(error.message);
         res.status(500).json({ message: "Internal server error" });
     }
 };
@@ -61,7 +61,7 @@ const getBlogById = async (req, res) => {
         }
         res.status(200).json(blog);
     } catch (error) {
-        console.log(error.message);
+        // console.log(error.message);
         res.status(500).json({ message: "Internal server error" });
     }
 };
@@ -74,7 +74,7 @@ const deleteBlog = async (req, res) => {
         }
         res.status(200).json({ message: "Blog deleted successfully" });
     } catch (error) {
-        console.log(error.message);
+        // console.log(error.message);
         res.status(500).json({ message: "Internal server error" });
     }
 };
@@ -110,7 +110,7 @@ const updateBlog = async (req, res) => {
 
         res.status(200).json(blog);
     } catch (error) {
-        console.log(error.message);
+        // console.log(error.message);
         res.status(500).json({ message: "Internal server error" });
     }
 };
