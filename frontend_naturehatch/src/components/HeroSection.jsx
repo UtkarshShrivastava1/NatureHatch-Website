@@ -72,7 +72,7 @@ const HeroSection = () => {
                 <div className="absolute inset-0 bg-gradient-to-br from-amber-100 to-amber-50 rounded-2xl overflow-hidden shadow-xl flex items-center justify-center">
                   {/* Replace this div with your actual image */}
                   <img 
-                    src="/api/placeholder/600/500" 
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Fried_Egg_2.jpg/1200px-Fried_Egg_2.jpg" 
                     alt="Assorted farm fresh eggs in a rustic basket" 
                     className="w-full h-full object-cover"
                   />

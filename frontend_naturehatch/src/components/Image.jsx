@@ -22,7 +22,7 @@ const Image = ({
   
   return (
     <img
-      src={src || '/api/placeholder/400/300'}
+      src={src || ''}
       alt={alt || 'Image'}
       width={width}
       height={height}

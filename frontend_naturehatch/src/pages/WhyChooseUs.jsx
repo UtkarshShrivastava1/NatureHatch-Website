@@ -150,7 +150,7 @@ const WhyChooseUs = () => {
             initial={{ scale: 1.1 }}
             animate={{ scale: 1 }}
             transition={{ duration: 1.5 }}
-            className="w-full h-full bg-[url('/api/placeholder/1200/600')] bg-cover bg-center opacity-20"
+            className="w-full h-full bg-[url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Fried_Egg_2.jpg/1200px-Fried_Egg_2.jpg')] bg-cover bg-center opacity-20"
           />
         </div>
         
