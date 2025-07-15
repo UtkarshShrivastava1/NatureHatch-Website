@@ -22,7 +22,7 @@ const Image = ({
   
   return (
     <img
-      src={src || ''}
+      src={src || 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Fried_Egg_2.jpg/1200px-Fried_Egg_2.jpg'}
       alt={alt || 'Image'}
       width={width}
       height={height}

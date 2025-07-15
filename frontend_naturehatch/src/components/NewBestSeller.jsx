@@ -14,52 +14,7 @@ export default function BestSellers() {
     setBestSeller(bestProducts.slice(0,5));
   },[products]);
 
-  // const [products] = useState([
-  //   {
-  //     id: 1,
-  //     name: "Egg Bhurji Momoz (20 Pcs)",
-  //     image: "/api/placeholder/250/250",
-  //     rating: 5,
-  //     reviews: 3,
-  //     originalPrice: 280.00,
-  //     salePrice: 196.00,
-  //     onSale: true,
-  //     hasOptions: false
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "White Eggs",
-  //     image: "/api/placeholder/250/250",
-  //     rating: 5,
-  //     reviews: 2,
-  //     originalPrice: 94.00,
-  //     salePrice: 75.00,
-  //     onSale: true,
-  //     hasOptions: true
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Eggoz Classic Nuggetz",
-  //     image: "/api/placeholder/250/250",
-  //     rating: 5,
-  //     reviews: 0,
-  //     originalPrice: 180.00,
-  //     salePrice: 126.00,
-  //     onSale: true,
-  //     hasOptions: false
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Free-Range Eggs",
-  //     image: "/api/placeholder/250/250",
-  //     rating: 5,
-  //     reviews: 1,
-  //     originalPrice: 130.00,
-  //     salePrice: 104.00,
-  //     onSale: true,
-  //     hasOptions: true
-  //   }
-  // ]);
+  
 
   const StarRating = ({ rating, reviews }) => {
     return (
