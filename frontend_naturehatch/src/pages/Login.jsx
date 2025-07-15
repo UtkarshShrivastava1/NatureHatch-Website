@@ -7,7 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-export default function Login({token, setToken}) {
+export default function Login({ token, setToken }) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [focusedInput, setFocusedInput] = useState(null);
   const [name, setName] = useState("");
@@ -30,28 +30,24 @@ export default function Login({token, setToken}) {
           return;
         }
 
-     const response = await axios.post(`${backendUrl}/api/user/sign-up`, {
-          name,
-          email,
-          phone: phone,
-          password,
-        },
-      {
-          withCredentials: true
-      });
-   
-        if (response.data.token) {
-          // console.log("Registration successful:", response);
-         
-          // setToken(response.data.token);
-          // localStorage.setItem("token", response.data.token);
-          // toast.success("Registration successful!");
-          // navigate("/");
+        const response = await axios.post(
+          `${backendUrl}/api/user/sign-up`,
+          {
+            name,
+            email,
+            phone: phone,
+            password,
+          },
+          {
+            withCredentials: true,
+          }
+        );
 
-           setToken(response.data.token);
-  localStorage.setItem("token", response.data.token);
-  toast.success("Registration successful!");
-  navigate("/");
+        if (response.data.token) {
+          setToken(response.data.token);
+          localStorage.setItem("token", response.data.token);
+          toast.success("Registration successful!");
+          navigate("/");
         } else {
           toast.error(response.data.message || "Registration failed");
         }
@@ -59,11 +55,12 @@ export default function Login({token, setToken}) {
         const response = await axios.post(
           `${backendUrl}/api/user/login`,
           { email, password },
-          { withCredentials: true,
+          {
+            withCredentials: true,
             headers: token ? { Authorization: `Bearer ${token}` } : {},
-           }
+          }
         );
-        
+
         if (response.data.token) {
           // setToken(response.data.token);  // Set token in state
           localStorage.setItem("token", response.data.token); // Backup in localStorage
@@ -86,8 +83,6 @@ export default function Login({token, setToken}) {
     }
   }, [token, navigate]);
 
-
-
   // const handleLogin = async () => {
   //   try {
   //     const response = await axios.post(`${backendUrl}/api/user/login`, {
@@ -108,17 +103,15 @@ export default function Login({token, setToken}) {
   //   }
   // };
 
-
   const handleGoogleLogin = async (credentialResponse) => {
     try {
       const userData = jwtDecode(credentialResponse.credential);
       console.log("Google user data:", userData);
 
-      const response = await axios.post(
-        `${backendUrl}/api/user/login-google`,
-        { userData }
-      );
-      
+      const response = await axios.post(`${backendUrl}/api/user/login-google`, {
+        userData,
+      });
+
       if (response.data.token) {
         // setToken(response.data.token);
         localStorage.setItem("token", response.data.token);
@@ -316,7 +309,7 @@ export default function Login({token, setToken}) {
                       </span>
                     </div>
                   </div>
-                  
+
                   <div className="flex justify-center w-full  h-10">
                     <GoogleLogin
                       onSuccess={handleGoogleLogin}
@@ -373,7 +366,10 @@ export default function Login({token, setToken}) {
                   </p>
                 </div>
 
-                <form onSubmit={onSubmitHandler} className="space-y-3 md:space-y-4">
+                <form
+                  onSubmit={onSubmitHandler}
+                  className="space-y-3 md:space-y-4"
+                >
                   <div className="space-y-3 md:space-y-4">
                     <div>
                       <div
@@ -522,7 +518,7 @@ export default function Login({token, setToken}) {
                   >
                     Sign Up
                   </button>
-                  
+
                   {/* Google Sign Up Button */}
                   <div className="relative py-2">
                     <div className="absolute inset-0 flex items-center">
@@ -534,13 +530,13 @@ export default function Login({token, setToken}) {
                       </span>
                     </div>
                   </div>
-                  
+
                   <div className="flex justify-center w-full">
                     <GoogleLogin
-                      onSuccess={()=>{
-                        handleGoogleLogin
+                      onSuccess={() => {
+                        handleGoogleLogin;
                         console.log("Google Login Success");
-                        navigate("/")
+                        navigate("/");
                       }}
                       onError={() => {
                         console.log("Google Login Failed");

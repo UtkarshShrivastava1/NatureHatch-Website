@@ -64,14 +64,14 @@ const Orders = () => {
               })}
 
               {/* Order Summary */}
-             <div className="pt-4 border-t text-sm text-gray-700 flex flex-col sm:flex-row sm:justify-between gap-4 sm:gap-0">
-  <p className="flex-1">
-    <span className="font-semibold">Shipping Address:</span>{" "}
-    {order.shippingAddress}
-  </p>
+              <div className="pt-4 border-t text-sm text-gray-700 flex flex-col sm:flex-row sm:justify-between gap-4 sm:gap-0">
+                <p className="flex-1">
+                  <span className="font-semibold">Shipping Address:</span>{" "}
+                  {order.shippingAddress}
+                </p>
 
-  <div
-    className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium border w-fit mx-auto sm:mx-0
+                <div
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium border w-fit mx-auto sm:mx-0
       ${
         order.status === "Delivered"
           ? "bg-green-50 border-green-500 text-green-700"
@@ -79,25 +79,24 @@ const Orders = () => {
           ? "bg-yellow-50 border-yellow-500 text-yellow-700"
           : "bg-gray-100 border-gray-400 text-gray-700"
       }`}
-  >
-    <span
-      className={`w-2.5 h-2.5 rounded-full ${
-        order.status === "Delivered"
-          ? "bg-green-500"
-          : order.status === "Pending"
-          ? "bg-yellow-500"
-          : "bg-gray-500"
-      }`}
-    />
-    <p className="rounded-full">{order.status}</p>
-  </div>
+                >
+                  <span
+                    className={`w-2.5 h-2.5 rounded-full ${
+                      order.status === "Delivered"
+                        ? "bg-green-500"
+                        : order.status === "Pending"
+                        ? "bg-yellow-500"
+                        : "bg-gray-500"
+                    }`}
+                  />
+                  <p className="rounded-full">{order.status}</p>
+                </div>
 
-  <p className="flex-1 sm:text-right">
-    <span className="font-semibold">Total:</span> {currency}
-    {order.totalAmount}
-  </p>
-</div>
-
+                <p className="flex-1 sm:text-right">
+                  <span className="font-semibold">Total:</span> {currency}
+                  {order.totalAmount}
+                </p>
+              </div>
             </div>
           ))
         )}
