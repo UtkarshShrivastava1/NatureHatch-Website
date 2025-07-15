@@ -39,9 +39,10 @@ const ShopContextProvider = (props) => {
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
-    // console.log("Stored token:", storedToken);
+    
     if (storedToken) {
       setToken(storedToken);
+      // console.log("Stored token:", storedToken);
       fetchCartFromServer(); // <- Fetch cart if token is present
     }
   }, []);

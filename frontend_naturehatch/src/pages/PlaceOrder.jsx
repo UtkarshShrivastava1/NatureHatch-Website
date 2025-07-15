@@ -15,8 +15,11 @@ import {
 import axios from "axios";
 
 const PlaceOrder = () => {
-  const { setCartItem, cartItem, getCartAmount, token, userId } =
+  const { setCartItem, cartItem, getCartAmount, userId } =
     useContext(ShopContext);
+
+     const token = localStorage.getItem("token");
+   
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -55,6 +58,7 @@ const PlaceOrder = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Token",token)
     if (!token) {
       alert("Please login to continue");
       navigate("/login");
