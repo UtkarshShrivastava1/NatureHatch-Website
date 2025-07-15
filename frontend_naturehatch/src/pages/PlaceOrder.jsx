@@ -15,10 +15,11 @@ import {
 import axios from "axios";
 
 const PlaceOrder = () => {
-  const { setCartItem, cartItem, getCartAmount, userId } =
+  const { setCartItem, cartItem, getCartAmount } =
     useContext(ShopContext);
 
      const token = localStorage.getItem("token");
+    //  console.log("token", token);
    
   const [formData, setFormData] = useState({
     name: "",
