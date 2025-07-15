@@ -201,8 +201,11 @@ const PlaceOrder = () => {
                       type="email"
                       label="Email Address"
                       value={formData.email}
-                      onChange={handleChange}
+                      onChange={handleChange} 
                     />
+
+                   
+
                   </div>
                   <InputField
                     icon={Phone}
