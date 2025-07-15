@@ -8,7 +8,7 @@ export const ShopContext = createContext();
 const ShopContextProvider = (props) => {
   const currency = "₹";
   const delivery_fee = 10;
-  const backendUrl = import.meta.env.VITE_DEVELOPMENT_URL || "http://localhost:5000";
+  const backendUrl = import.meta.env.VITE_DEVELOPMENT_URL || import.meta.env.VITE_PRODUCTION_URL || "http://localhost:5000";
 
   const [search, setSearch] = useState("");
   const [products, setProducts] = useState([]);
