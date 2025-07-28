@@ -9,7 +9,6 @@ const ShopContextProvider = (props) => {
   const currency = "₹";
   const delivery_fee = 10;
   console.log(import.meta.env.VITE_PRODUCTION_URL);
-  // console.log(import.meta.env);
   // const backendUrl = import.meta.env.VITE_PRODUCTION_URL;
   const backendUrl = "https://naturehatch-website.onrender.com"
 
