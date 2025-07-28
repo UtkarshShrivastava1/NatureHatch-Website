@@ -18,7 +18,7 @@ export default function Login({ token, setToken }) {
   const [currentState, setCurrentState] = useState("Login");
   // const [token , setToken] = useState(localStorage.getItem("token") || "");
 
-  const backendUrl = "http://localhost:5000";
+  const backendUrl = "https://naturehatch-website.onrender.com";
   const navigate = useNavigate();
 
   const onSubmitHandler = async (e) => {
