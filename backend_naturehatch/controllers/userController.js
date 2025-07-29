@@ -20,7 +20,8 @@ const transporter = nodemailer.createTransport({
 
 const sendVerificationEmail = async (email, token) => {
   // const verificationLink = `http://localhost:5000/api/user/verify-email?token=${token}`;
-  const baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+  // const baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+  const baseUrl = "https://naturehatch-website.onrender.com"
 const verificationLink = `${baseUrl}/api/user/verify-email?token=${token}`;
 
 
