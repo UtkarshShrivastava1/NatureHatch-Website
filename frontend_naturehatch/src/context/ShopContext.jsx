@@ -74,7 +74,8 @@ const ShopContextProvider = (props) => {
       toast.success("Added to cart");
     } catch (err) {
       console.error("Add to cart failed:", err.response?.data || err.message);
-      toast.error("Could not update cart on server");
+      toast.error("Please Login.");
+      
     }
   };
 
