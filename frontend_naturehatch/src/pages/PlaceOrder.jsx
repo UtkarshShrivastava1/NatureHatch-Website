@@ -20,7 +20,6 @@ const PlaceOrder = () => {
 
      const token = localStorage.getItem("token");
     //  console.log("token", token);
-    const user = JSON.parse(localStorage.getItem("user"));
    
   const [formData, setFormData] = useState({
     name: "",
@@ -80,7 +79,7 @@ const PlaceOrder = () => {
           Math.round(getCartAmount() * 0.18);
 
         const orderData = {
-          userId : user?.id,
+          userId,
           products,
           totalAmount,
           shippingAddress: `${formData.address}, ${formData.city}, ${formData.state}, ${formData.pincode}`,
@@ -89,7 +88,6 @@ const PlaceOrder = () => {
               ? selectedOnlineOption
               : formData.paymentMethod,
         };
-        console.log(orderData)
 
         switch (formData.paymentMethod) {
           case "Cash on Delivery": {
