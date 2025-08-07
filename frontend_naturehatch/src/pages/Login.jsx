@@ -113,7 +113,7 @@ export default function Login({ token, setToken }) {
         { email, password },
         {
           withCredentials: true,
-          // headers: token ? { Authorization: `Bearer ${token}` } : {},
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
         }
       );
 
@@ -126,7 +126,7 @@ export default function Login({ token, setToken }) {
     id: user.id,
     email: user.email
   }));
-
+  
         toast.success("Login successful!");
         navigate("/");
       } else {
