@@ -92,7 +92,7 @@ const PlaceOrder = () => {
         switch (formData.paymentMethod) {
           case "Cash on Delivery": {
             const response = await axios.post(
-              "http://localhost:5000/api/order/create-order",
+              "https://naturehatch-website.onrender.com/api/order/create-order",
               orderData,
               {
                 headers: { Authorization: `Bearer ${token}` },
