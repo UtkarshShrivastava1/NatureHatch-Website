@@ -21,61 +21,124 @@ export default function Login({ token, setToken }) {
   const backendUrl = "https://naturehatch-website.onrender.com";
   const navigate = useNavigate();
 
+  // const onSubmitHandler = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     if (currentState === "Sign Up") {
+  //       if (password !== confirmPassword) {
+  //         toast.error("Passwords don't match!");
+  //         return;
+  //       }
+
+  //       const response = await axios.post(
+  //         `${backendUrl}/api/user/sign-up`,
+  //         {
+  //           name,
+  //           email,
+  //           phone: phone,
+  //           password,
+  //         },
+  //         {
+  //           withCredentials: true,
+  //         }
+  //       );
+
+  //       if (response.data.token) {
+  //         setToken(response.data.token);
+  //         localStorage.setItem("token", response.data.token);
+  //         toast.success("Registration successful!");
+  //         navigate("/");
+  //       } else {
+  //         toast.error(response.data.message || "Registration failed");
+  //       }
+  //     } else {
+  //       const response = await axios.post(
+  //         `${backendUrl}/api/user/login`,
+  //         { email, password },
+  //         {
+  //           withCredentials: true,
+  //           headers: token ? { Authorization: `Bearer ${token}` } : {},
+  //         }
+  //       );
+
+  //       if (response.data.token) {
+  //         // setToken(response.data.token);  // Set token in state
+  //         localStorage.setItem("token", response.data.token); // Backup in localStorage
+  //         console.log("Login successful:", response);
+  //         toast.success("Login successful!");
+  //         navigate("/");
+  //       } else {
+  //         toast.error(response.data.message || "Login failed");
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error(error.response?.data?.message || error.message);
+  //     toast.error(error.response?.data?.message || "Authentication failed");
+  //   }
+  // };
+
+
   const onSubmitHandler = async (e) => {
-    e.preventDefault();
-    try {
-      if (currentState === "Sign Up") {
-        if (password !== confirmPassword) {
-          toast.error("Passwords don't match!");
-          return;
-        }
-
-        const response = await axios.post(
-          `${backendUrl}/api/user/sign-up`,
-          {
-            name,
-            email,
-            phone: phone,
-            password,
-          },
-          {
-            withCredentials: true,
-          }
-        );
-
-        if (response.data.token) {
-          setToken(response.data.token);
-          localStorage.setItem("token", response.data.token);
-          toast.success("Registration successful!");
-          navigate("/");
-        } else {
-          toast.error(response.data.message || "Registration failed");
-        }
-      } else {
-        const response = await axios.post(
-          `${backendUrl}/api/user/login`,
-          { email, password },
-          {
-            withCredentials: true,
-            headers: token ? { Authorization: `Bearer ${token}` } : {},
-          }
-        );
-
-        if (response.data.token) {
-          // setToken(response.data.token);  // Set token in state
-          localStorage.setItem("token", response.data.token); // Backup in localStorage
-          console.log("Login successful:", response);
-          toast.success("Login successful!");
-          navigate("/");
-        } else {
-          toast.error(response.data.message || "Login failed");
-        }
+  e.preventDefault();
+  try {
+    if (currentState === "Sign Up") {
+      if (password !== confirmPassword) {
+        toast.error("Passwords don't match!");
+        return;
       }
-    } catch (error) {
-      console.error(error.response?.data?.message || error.message);
-      toast.error(error.response?.data?.message || "Authentication failed");
+
+      const response = await axios.post(
+        `${backendUrl}/api/user/sign-up`,
+        {
+          name,
+          email,
+          phone,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.data.success) {
+        toast.success("Registration successful! Please log in.");
+        flipCard(); // Flip to Login form
+      } else {
+        toast.error(response.data.message || "Registration failed");
+      }
+
+    } else {
+      const response = await axios.post(
+        `${backendUrl}/api/user/login`,
+        { email, password },
+        {
+          withCredentials: true,
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        }
+      );
+
+      if (response.data.token) {
+        const {  user } = response.data;
+        setToken(response.data.token);
+        localStorage.setItem("token", response.data.token);
+
+        localStorage.setItem("user", JSON.stringify({
+    id: user.id,
+    email: user.email
+  }));
+  
+        toast.success("Login successful!");
+        navigate("/");
+      } else {
+        toast.error(response.data.message || "Login failed");
+      }
     }
-  };
+  } catch (error) {
+    console.error(error.response?.data?.message || error.message);
+    toast.error(error.response?.data?.message || "Authentication failed");
+  }
+};
+
 
   useEffect(() => {
     if (token) {
