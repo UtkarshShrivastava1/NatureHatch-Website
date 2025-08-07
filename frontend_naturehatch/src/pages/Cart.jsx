@@ -6,7 +6,7 @@ import CartTotal from '../components/CartTotal';
 import axios from 'axios';
 import Stars from '../components/Stars';
 
-const backendUrl = 'http://localhost:5000';
+const backendUrl = 'https://naturehatch-website.onrender.com';
 
 const Cart = () => {
   const { products, currency, cartItem, updateQuantity, navigate, removeFromCart } = useContext(ShopContext);
