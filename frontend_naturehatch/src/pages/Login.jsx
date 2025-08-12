@@ -62,8 +62,14 @@ export default function Login({ token, setToken }) {
         );
 
         if (response.data.token) {
+          const {  user } = response.data;
           // setToken(response.data.token);  // Set token in state
-          localStorage.setItem("token", response.data.token); // Backup in localStorage
+          localStorage.setItem("token", response.data.token); 
+          // Backup in localStorage
+          localStorage.setItem("user", JSON.stringify({
+    id: user.id,
+    email: user.email
+  }));
           console.log("Login successful:", response);
           toast.success("Login successful!");
           navigate("/");
