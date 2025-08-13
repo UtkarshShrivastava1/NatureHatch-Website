@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { backendUrl } from '../App';
 
 const Order = () => {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const backendUrl = "https://naturehatch-website.onrender.com";
 
   const fetchList = async () => {
     try {
@@ -25,13 +25,14 @@ const Order = () => {
     }
   };
 
-  const updateStatus = async (orderId) => {
+  const updateStatus = async (orderId, newStatus) => {
+    console.log(orderId,newStatus)
     try {
       const response = await axios.put(`${backendUrl}/api/order/update-status/${orderId}`, {
-        status: 'Delivered',
+        status: newStatus,
       });
       if (response.data) {
-        toast.success('Order marked as Delivered');
+        toast.success(`Order status updated to ${newStatus}`);
         fetchList();
       }
     } catch (error) {
@@ -52,7 +53,7 @@ const Order = () => {
       ) : list.length === 0 ? (
         <p className="text-gray-500">No orders found.</p>
       ) : (
-        <div className=" bg-white rounded-lg shadow border border-green-100">
+        <div className="bg-white rounded-lg shadow border border-green-100">
           <table className="min-w-full text-sm text-left text-gray-700">
             <thead className="bg-green-600 text-white text-sm">
               <tr>
@@ -77,7 +78,17 @@ const Order = () => {
                   <td className="px-4 py-2">{order.shippingAddress}</td>
                   <td className="px-4 py-2">{new Date(order.orderDate).toLocaleString()}</td>
                   <td className="px-4 py-2">
-                    <span className={`text-xs font-semibold px-2 py-1 rounded-full ${order.status === 'Delivered' ? 'bg-green-200 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                    <span
+                      className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                        order.status === 'Delivered'
+                          ? 'bg-green-200 text-green-800'
+                          : order.status === 'Dispatched'
+                          ? 'bg-blue-200 text-blue-800'
+                          : order.status === 'Confirmed'
+                          ? 'bg-yellow-200 text-yellow-800'
+                          : 'bg-gray-200 text-gray-800'
+                      }`}
+                    >
                       {order.status}
                     </span>
                   </td>
@@ -93,14 +104,29 @@ const Order = () => {
                     </ul>
                   </td>
                   <td className="px-4 py-2">
-                    {order.status !== 'Delivered' && (
-                      <button
-                        onClick={() => updateStatus(order._id)}
-                        className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm transition"
+                    <div className="flex items-center gap-2">
+                      {/* <select
+                        value={order.status}
+                        onChange={(e) => updateStatus(order._id, e.target.value)}
+                        className="border rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                       >
-                        Mark as Delivered
-                      </button>
-                    )}
+                        <option value="Pending">Pending</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Dispatched">Dispatched</option>
+                        <option value="Delivered">Delivered</option>
+                      </select> */}
+                      <select
+  value={order.status}
+  onChange={(e) => updateStatus(order._id, e.target.value)}
+  className="border rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+>
+  <option value="Pending">Pending</option>
+  <option value="Shipped">Shipped</option>
+  <option value="Delivered">Delivered</option>
+  <option value="Cancelled">Cancelled</option>
+</select>
+
+                    </div>
                   </td>
                 </tr>
               ))}
