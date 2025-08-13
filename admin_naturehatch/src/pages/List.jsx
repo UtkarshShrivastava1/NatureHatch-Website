@@ -10,6 +10,7 @@ const List = ({ token }) => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  const backendUrl = import.meta.env.VITE_PRODUCTION_URL || "https://naturehatch-website.onrender.com";
 
   const fetchList = async () => {
     try {
