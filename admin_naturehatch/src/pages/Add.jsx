@@ -14,6 +14,7 @@ const Add = ({ token }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const backendUrl = import.meta.env.VITE_PRODUCTION_URL || "https://naturehatch-website.onrender.com";
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -42,7 +43,8 @@ const Add = ({ token }) => {
     formData.append('category', category);
 
     try {
-      await axios.post('http://localhost:5000/api/products/create-product', formData, {
+      // await axios.post('http://localhost:5000/api/products/create-product', formData, {
+      await axios.post(`${backendUrl}/api/products/create-product`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
@@ -135,7 +137,7 @@ const Add = ({ token }) => {
           {/* Left Column - Basic Details */}
           <div className="space-y-4">
             <div>
-              <label className="block text-green-800 font-medium mb-2 flex items-center">
+              <label className=" text-green-800 font-medium mb-2 flex items-center">
                 <ShoppingBag className="mr-2" size={18} />
                 Product Name
               </label>
@@ -149,7 +151,7 @@ const Add = ({ token }) => {
             </div>
             
             <div>
-              <label className="block text-green-800 font-medium mb-2 flex items-center">
+              <label className=" text-green-800 font-medium mb-2 flex items-center">
                 <Tag className="mr-2" size={18} />
                 Category
               </label>
@@ -167,7 +169,7 @@ const Add = ({ token }) => {
             
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-green-800 font-medium mb-2 flex items-center">
+                <label className=" text-green-800 font-medium mb-2 flex items-center">
                   <DollarSign className="mr-2" size={18} />
                   Price
                 </label>
@@ -186,7 +188,7 @@ const Add = ({ token }) => {
               </div>
               
               <div>
-                <label className="block text-green-800 font-medium mb-2 flex items-center">
+                <label className=" text-green-800 font-medium mb-2 flex items-center">
                   <ShoppingBag className="mr-2" size={18} />
                   Quantity
                 </label>
