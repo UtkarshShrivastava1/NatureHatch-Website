@@ -47,6 +47,52 @@ const deliveryInfoSchema = new mongoose.Schema({
   }
 }, { _id:false });
 
+//Order History ----
+// Order Item Schema
+const orderItemSchema = new mongoose.Schema({
+  productId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product',
+    required: true
+  },
+  quantity: {
+    type: Number,
+    required: true,
+    min: 1
+  },
+  price: {
+    type: Number,
+    required: true
+  }
+}, { _id: false });
+
+// Order Schema
+const orderSchema = new mongoose.Schema({
+  products: [orderItemSchema],
+  totalAmount: {
+    type: Number,
+    required: true
+  },
+  paymentMethod: {
+    type: String,
+    enum: ['cod', 'online'],
+    default: 'cod'
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+    default: 'pending'
+  },
+  orderedAt: {
+    type: Date,
+    default: Date.now
+  },
+  deliveryInfo: deliveryInfoSchema
+}, { _id: true });
+
+
+//Ends Here ------
+
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -112,6 +158,11 @@ const userSchema = new mongoose.Schema({
         required: false,
         default: {}
     },
+
+      orders: {
+    type: [orderSchema],
+    default: []
+  }
 });
 
 const User = mongoose.model('User',userSchema);
