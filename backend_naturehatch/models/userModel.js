@@ -159,10 +159,17 @@ const userSchema = new mongoose.Schema({
         default: {}
     },
 
-      orders: {
-    type: [orderSchema],
-    default: []
-  }
+  //     orders: {
+  //   type: [orderSchema],
+  //   default: []
+  // }
+
+   orders: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Order"
+    }
+  ]
 });
 
 const User = mongoose.model('User',userSchema);
