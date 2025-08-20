@@ -205,18 +205,22 @@ const createOrder = async (req, res) => {
     await newOrder.save();
 
     const user = await User.findById(userId);
-    console.log(userId)
+    // console.log(userId)
     if (!user) throw new Error('User not found');
 
-    user.orders.push({
-      products,
-      totalAmount,
-      paymentMethod,
-      deliveryInfo: shippingAddress,  // ✅ matches your user schema
-      status: 'pending'
-    });
+    // user.orders.push({
+    //   products,
+    //   totalAmount,
+    //   paymentMethod,
+    //   deliveryInfo: shippingAddress,  // ✅ matches your user schema
+    //   status: 'pending'
+    // });
 
-    await user.save();
+    // await user.save();
+
+    await User.findByIdAndUpdate(userId, {
+  $push: { orders: newOrder._id }
+});
 
     const invoiceDir = `${__dirname}/../../invoices`;
     if (!fs.existsSync(invoiceDir)) fs.mkdirSync(invoiceDir, { recursive: true });
