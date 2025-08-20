@@ -205,7 +205,18 @@ const createOrder = async (req, res) => {
     await newOrder.save();
 
     const user = await User.findById(userId);
+    console.log(userId)
     if (!user) throw new Error('User not found');
+
+    user.orders.push({
+      products,
+      totalAmount,
+      paymentMethod,
+      deliveryInfo: shippingAddress,  // ✅ matches your user schema
+      status: 'pending'
+    });
+
+    await user.save();
 
     const invoiceDir = `${__dirname}/../../invoices`;
     if (!fs.existsSync(invoiceDir)) fs.mkdirSync(invoiceDir, { recursive: true });
@@ -236,6 +247,97 @@ const createOrder = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+
+// const createOrder = async (req, res) => {
+//   try {
+//     const userId = req.user.id; 
+//     const { products, totalAmount, shippingAddress, paymentMethod } = req.body;
+
+//     if (!mongoose.Types.ObjectId.isValid(userId)) {
+//       return res.status(400).json({ message: 'Invalid user ID' });
+//     }
+
+//     if (!Array.isArray(products) || products.length === 0) {
+//       return res.status(400).json({ message: 'Products array is required' });
+//     }
+
+//     if (!shippingAddress || !paymentMethod) {
+//       return res.status(400).json({ message: 'Shipping address and payment method are required' });
+//     }
+
+//     // Validate & update stock
+//     for (const item of products) {
+//       const product = await Product.findById(item.productId);
+//       if (!product) {
+//         return res.status(404).json({ message: `Product not found: ${item.productId}` });
+//       }
+//       if (product.quantity < item.quantity) {
+//         return res.status(400).json({ message: `Not enough stock for ${product.productname}` });
+//       }
+//       product.quantity -= item.quantity;
+//       await product.save();
+//     }
+
+//     // Create order in Order collection
+//     const newOrder = new Order({
+//       userId,
+//       products,
+//       totalAmount,
+//       shippingAddress,
+//       paymentMethod,
+//     });
+//     await newOrder.save();
+
+//     // Add order to User.orders array
+//     const user = await User.findById(userId);
+//     if (!user) throw new Error('User not found');
+
+//     user.orders.push({
+//       products,
+//       totalAmount,
+//       paymentMethod,
+//       deliveryInfo: shippingAddress,  // ✅ matches your user schema
+//       status: 'pending'
+//     });
+
+//     await user.save(); // ✅ important
+
+//     // Generate invoice
+//     const invoiceDir = `${__dirname}/../../invoices`;
+//     if (!fs.existsSync(invoiceDir)) fs.mkdirSync(invoiceDir, { recursive: true });
+
+//     const invoicePath = `invoices/invoice-${newOrder._id}.pdf`;
+//     const fullPath = `${__dirname}/../../${invoicePath}`;
+
+//     await generateInvoice({
+//       _id: newOrder._id,
+//       createdAt: newOrder.createdAt,
+//       userId: user._id,
+//       products,
+//       totalAmount,
+//       shippingAddress
+//     }, fullPath);
+
+//     if (user.email) {
+//       await sendOrderConfirmationEmail(user.email, newOrder, fullPath);
+//     }
+
+//     res.status(201).json({
+//       message: 'Order placed successfully',
+//       order: newOrder,
+//     });
+
+//   } catch (error) {
+//     console.error('Error creating order:', error);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// };
+
+
+// Another route above for testing
+
+
 
 // Other order handlers
 const getAllOrders = async (req, res) => {
