@@ -408,24 +408,23 @@ const updateDeliveryInfo = async (req, res) => {
 const myOrders = async (req, res) => {
   try {
     const userId = req.userId || req.params.userId || req.body.userId;
-    // console.log("Resolved userId:", userId);
 
-    if (!userId)
-      return res.status(401).json({ message: "User not authenticated" });
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "User not authenticated" });
+    }
 
-    const orders = await Order.find({ userId }) // No need to cast manually
-      .populate("products.productId", "name price image")
+    const orders = await Order.find({ userId })
+      .populate("products.productId", "productname price imageURL")
       .sort({ orderDate: -1 });
 
-    if (!orders || orders.length === 0)
-      return res.status(404).json({ message: "No orders found" });
-
-    return res
-      .status(200)
-      .json({ message: "Orders fetched successfully", orders });
+    return res.status(200).json({
+      success: true,
+      message: "Orders fetched successfully",
+      orders: orders || []
+    });
   } catch (error) {
     console.error("Fetch Orders Error:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 

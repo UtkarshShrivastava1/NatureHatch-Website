@@ -1,13 +1,110 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
 
 const Orders = () => {
-  const { orders, currency, products } = useContext(ShopContext);
+  const { currency } = useContext(ShopContext);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const storedUser = localStorage.getItem("user"); // stored userId
+  // console.log(userId)
 
-  const getProductDetails = (productId) => {
-    return products.find((p) => p._id === productId);
+  // if (storedUser) {
+  const user = JSON.parse(storedUser);
+  console.log("User ID:", user.id);    // 👉 "68a597970b6ed4bc430a5a22"
+  console.log("User Email:", user.email);
+// } 
+const userId = user.id // convert string → object
+console.log(userId)
+  // Fetch orders
+  // useEffect(() => {
+  //   const fetchOrders = async () => {
+  //     try {
+  //       setLoading(true);
+
+  //       if (!userId) {
+  //         setError("User not logged in");
+  //         setLoading(false);
+  //         return;
+  //       }
+
+  //       const response = await fetch(
+  //         "https://naturehatch-website.onrender.com/api/user/my-orders",
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //           body: JSON.stringify({ userId }),
+  //         }
+  //       );
+
+  //       if (!response.ok) throw new Error("Failed to fetch orders");
+
+  //       const data = await response.json();
+  //       setOrders(data.orders || []);
+  //     } catch (err) {
+  //       setError(err.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchOrders();
+  // }, [userId]);
+
+
+  useEffect(() => {
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+
+      if (!userId) {
+        setError("User not logged in");
+        setLoading(false);
+        return;
+      }
+
+      const response = await fetch(
+        `https://naturehatch-website.onrender.com/api/user/my-orders?userId=${userId}`
+      );
+
+      if (!response.ok) throw new Error("Failed to fetch orders");
+
+      const data = await response.json();
+      setOrders(data.orders || []);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  fetchOrders();
+}, [userId]);
+
+  if (loading) {
+    return (
+      <div className="border-t pt-16 mb-52 px-4 sm:px-8">
+        <div className="text-2xl mb-6">
+          <Title text1={"YOUR"} text2={"ORDERS"} />
+        </div>
+        <p className="text-gray-600 text-lg">Loading orders...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="border-t pt-16 mb-52 px-4 sm:px-8">
+        <div className="text-2xl mb-6">
+          <Title text1={"YOUR"} text2={"ORDERS"} />
+        </div>
+        <p className="text-red-600 text-lg">Error: {error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="border-t pt-16 mb-52 px-4 sm:px-8">
@@ -24,12 +121,19 @@ const Orders = () => {
               key={order._id || index}
               className="p-6 border rounded-xl shadow-sm bg-white hover:shadow-md transition-all duration-300 space-y-4"
             >
+              {/* Order Header */}
               <div className="flex justify-between items-center">
-                <div className="text-sm text-gray-600"></div>
+                <div className="text-sm text-gray-600">
+                  Order #{order._id.slice(-8).toUpperCase()}
+                </div>
+                <p className="text-sm text-gray-500">
+                  {new Date(order.orderDate).toLocaleDateString()}
+                </p>
               </div>
 
+              {/* Products */}
               {order.products.map((prod, i) => {
-                const product = getProductDetails(prod.productId);
+                const product = prod.productId; // populated product
                 return (
                   <div
                     key={i}
@@ -50,9 +154,8 @@ const Orders = () => {
                             {currency}
                             {product?.price || "0"}
                           </p>
-                          <p>Qty: {product.quantity}</p>
+                          <p>Qty: {prod.quantity}</p>
                         </div>
-                        <p>Date: {new Date(order.orderDate).toDateString()}</p>
                       </div>
                     </div>
 
@@ -96,6 +199,12 @@ const Orders = () => {
                   <span className="font-semibold">Total:</span> {currency}
                   {order.totalAmount}
                 </p>
+              </div>
+
+              {/* Payment Method */}
+              <div className="text-sm text-gray-600">
+                <span className="font-semibold">Payment Method:</span>{" "}
+                {order.paymentMethod}
               </div>
             </div>
           ))
