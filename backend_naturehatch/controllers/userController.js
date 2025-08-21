@@ -407,8 +407,8 @@ const updateDeliveryInfo = async (req, res) => {
 
 const myOrders = async (req, res) => {
   try {
-    const userId = req.userId || req.params.userId || req.body.userId;
-
+    // const userId = req.userId || req.params.userId || req.body.userId;
+       const userId = req.userId || req.params.userId || req.query.userId || req.body.userId;
     if (!userId) {
       return res.status(401).json({ success: false, message: "User not authenticated" });
     }
