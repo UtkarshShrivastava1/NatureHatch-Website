@@ -1,7 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useCallback, memo } from "react";
 import { ShopContext } from "../context/ShopContext";
 import { useNavigate } from "react-router-dom";
-import CartToral from "../components/CartTotal";
+import CartTotal from "../components/CartTotal";
 import {
   CreditCard,
   MapPin,
@@ -14,14 +14,60 @@ import {
 } from "lucide-react";
 import axios from "axios";
 
-const PlaceOrder = () => {
-  const { setCartItem, cartItem, getCartAmount } =
-    useContext(ShopContext);
+// Memoized InputField component
+const InputField = memo(({ 
+  icon: Icon, 
+  name, 
+  type = "text", 
+  label, 
+  value, 
+  onChange, 
+  onFocus, 
+  onBlur, 
+  error,
+  focused 
+}) => (
+  <div className="relative group">
+    <label htmlFor={name} className="block text-sm font-medium text-black/90 mb-2">
+      {label}
+    </label>
+    <div
+      className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10"
+      style={{ top: "28px" }}
+    >
+      <Icon
+        className={`h-5 w-5 transition-colors duration-300 ${
+          focused ? "text-yellow-600" : "text-gray-400"
+        }`}
+      />
+    </div>
+    <input
+      type={type}
+      name={name}
+      id={name}
+      defaultValue={value}
+      onChange={onChange}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      placeholder={label}
+      className={`w-full pl-12 pr-4 py-4 bg-white/10 backdrop-blur-sm border-2 rounded-2xl transition-all duration-300 text-gray-800 placeholder-gray-500 focus:outline-none focus:border-yellow-500 focus:bg-white/20 focus:shadow-lg focus:shadow-purple-500/25 hover:bg-white/15 hover:border-gray-300 ${
+        error ? "border-red-400 bg-red-50/20" : "border-gray-200"
+      }`}
+    />
+    {error && (
+      <div className="absolute -bottom-6 left-0 text-red-400 text-sm font-medium animate-pulse">
+        {error}
+      </div>
+    )}
+  </div>
+));
 
-     const token = localStorage.getItem("token");
-    //  console.log("token", token);
-    const user = JSON.parse(localStorage.getItem("user"));
-   
+const PlaceOrder = () => {
+  const { setCartItem, cartItem, getCartAmount } = useContext(ShopContext);
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -34,20 +80,25 @@ const PlaceOrder = () => {
     shippingMethod: "standard",
     saveInfo: false,
   });
+
   const [selectedOnlineOption, setSelectedOnlineOption] = useState("");
   const [errors, setErrors] = useState({});
   const [focusedField, setFocusedField] = useState("");
-  const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  // Debounced form update
+  const handleChange = useCallback((e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
+    const newValue = type === "checkbox" ? checked : value;
+    
+    requestAnimationFrame(() => {
+      setFormData(prev => ({
+        ...prev,
+        [name]: newValue
+      }));
     });
-  };
+  }, []);
 
-  const validate = () => {
+  const validate = useCallback(() => {
     const newErrors = {};
     Object.keys(formData).forEach((key) => {
       if (!formData[key] && key !== "saveInfo") {
@@ -56,11 +107,11 @@ const PlaceOrder = () => {
     });
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
+  }, [formData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Token",token)
+    
     if (!token) {
       alert("Please login to continue");
       navigate("/login");
@@ -80,7 +131,7 @@ const PlaceOrder = () => {
           Math.round(getCartAmount() * 0.18);
 
         const orderData = {
-          userId  : user?.id,
+          userId: user?.id,
           products,
           totalAmount,
           shippingAddress: `${formData.address}, ${formData.city}, ${formData.state}, ${formData.pincode}`,
@@ -90,36 +141,28 @@ const PlaceOrder = () => {
               : formData.paymentMethod,
         };
 
-        switch (formData.paymentMethod) {
-          case "Cash on Delivery": {
-            const response = await axios.post(
-              "https://naturehatch-website.onrender.com/api/order/create-order",
-              orderData,
-              {
-                headers: { Authorization: `Bearer ${token}` },
-              }
-            );
-
-            if (response.data) {
-              setCartItem({});
-              localStorage.removeItem("cartItems"); // clear persisted cart
-
-              alert("Order placed successfully!");
-              navigate("/orders");
+        if (formData.paymentMethod === "Cash on Delivery") {
+          const response = await axios.post(
+            "https://naturehatch-website.onrender.com/api/order/create-order",
+            orderData,
+            {
+              headers: { Authorization: Bearer `${token}` },
             }
-            break;
+          );
+
+          if (response.data) {
+            setCartItem({});
+            localStorage.removeItem("cartItems");
+            alert("Order placed successfully!");
+            navigate("/orders");
           }
-          case "Online payment": {
-            if (!selectedOnlineOption) {
-              alert("Please select an online payment method");
-              return;
-            }
-            alert(`Proceeding to ${selectedOnlineOption} payment...`);
-            // Integration with payment gateway goes here.
-            break;
+        } else if (formData.paymentMethod === "Online payment") {
+          if (!selectedOnlineOption) {
+            alert("Please select an online payment method");
+            return;
           }
-          default:
-            throw new Error("Invalid payment method selected");
+          alert(`Proceeding to ${selectedOnlineOption} payment...`);
+          // Payment gateway integration here
         }
       } catch (error) {
         console.error("Error:", error.message);
@@ -128,54 +171,10 @@ const PlaceOrder = () => {
     }
   };
 
-  const InputField = ({
-    icon: Icon,
-    name,
-    type = "text",
-    label,
-    value,
-    onChange,
-  }) => (
-    <div className="relative group">
-      <label
-        htmlFor={name}
-        className="block text-sm font-medium text-black/90 mb-2"
-      >
-        {label}
-      </label>
-      <div
-        className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10"
-        style={{ top: "28px" }}
-      >
-        <Icon
-          className={`h-5 w-5 transition-colors duration-300 ${
-            focusedField === name ? "text-yellow-600" : "text-gray-400"
-          }`}
-        />
-      </div>
-      <input
-        type={type}
-        name={name}
-        id={name}
-        placeholder={label}
-        value={value}
-        onChange={onChange}
-        onFocus={() => setFocusedField(name)}
-        onBlur={() => setFocusedField("")}
-        className={`w-full pl-12 pr-4 py-4 bg-white/10 backdrop-blur-sm border-2 rounded-2xl transition-all duration-300 text-gray-800 placeholder-gray-500 focus:outline-none focus:border-yellow-500 focus:bg-white/20 focus:shadow-lg focus:shadow-purple-500/25 hover:bg-white/15 hover:border-gray-300 ${
-          errors[name] ? "border-red-400 bg-red-50/20" : "border-gray-200"
-        }`}
-      />
-      {errors[name] && (
-        <div className="absolute -bottom-6 left-0 text-red-400 text-sm font-medium animate-pulse">
-          {errors[name]}
-        </div>
-      )}
-    </div>
-  );
-
+  // Rest of your JSX remains the same, but update the InputField usage
   return (
     <div className="min-h-screen px-4 py-8 sm:px-6 md:px-10 lg:px-20 xl:px-28">
+      {/* ... existing header JSX ... */}
       <div className="relative max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
@@ -187,8 +186,10 @@ const PlaceOrder = () => {
                 Fill in your details to complete checkout
               </p>
             </div>
+
             <div className="bg-white/20 backdrop-blur-xl rounded-3xl shadow-xl border border-white/30 p-6 sm:p-8">
               <form className="space-y-8" onSubmit={handleSubmit}>
+                {/* Personal Information */}
                 <div className="space-y-6">
                   <h3 className="text-lg sm:text-xl font-semibold text-black flex items-center gap-2">
                     <User className="h-5 w-5" /> Personal Information
@@ -200,6 +201,10 @@ const PlaceOrder = () => {
                       label="Full Name"
                       value={formData.name}
                       onChange={handleChange}
+                      onFocus={() => setFocusedField("name")}
+                      onBlur={() => setFocusedField("")}
+                      error={errors.name}
+                      focused={focusedField === "name"}
                     />
                     <InputField
                       icon={Mail}
@@ -207,11 +212,12 @@ const PlaceOrder = () => {
                       type="email"
                       label="Email Address"
                       value={formData.email}
-                      onChange={handleChange} 
+                      onChange={handleChange}
+                      onFocus={() => setFocusedField("email")}
+                      onBlur={() => setFocusedField("")}
+                      error={errors.email}
+                      focused={focusedField === "email"}
                     />
-
-                   
-
                   </div>
                   <InputField
                     icon={Phone}
@@ -219,9 +225,14 @@ const PlaceOrder = () => {
                     label="Phone Number"
                     value={formData.phone}
                     onChange={handleChange}
+                    onFocus={() => setFocusedField("phone")}
+                    onBlur={() => setFocusedField("")}
+                    error={errors.phone}
+                    focused={focusedField === "phone"}
                   />
                 </div>
 
+                {/* Address Section */}
                 <div className="space-y-6">
                   <h3 className="text-lg sm:text-xl font-semibold text-black flex items-center gap-2">
                     <MapPin className="h-5 w-5" /> Delivery Address
@@ -232,14 +243,23 @@ const PlaceOrder = () => {
                     label="Street Address"
                     value={formData.address}
                     onChange={handleChange}
+                    onFocus={() => setFocusedField("address")}
+                    onBlur={() => setFocusedField("")}
+                    error={errors.address}
+                    focused={focusedField === "address"}
                   />
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* City, State, Pincode fields */}
                     <InputField
                       icon={Building}
                       name="city"
                       label="City"
                       value={formData.city}
                       onChange={handleChange}
+                      onFocus={() => setFocusedField("city")}
+                      onBlur={() => setFocusedField("")}
+                      error={errors.city}
+                      focused={focusedField === "city"}
                     />
                     <InputField
                       icon={Building}
@@ -247,6 +267,10 @@ const PlaceOrder = () => {
                       label="State"
                       value={formData.state}
                       onChange={handleChange}
+                      onFocus={() => setFocusedField("state")}
+                      onBlur={() => setFocusedField("")}
+                      error={errors.state}
+                      focused={focusedField === "state"}
                     />
                     <InputField
                       icon={Hash}
@@ -254,14 +278,18 @@ const PlaceOrder = () => {
                       label="Pincode"
                       value={formData.pincode}
                       onChange={handleChange}
+                      onFocus={() => setFocusedField("pincode")}
+                      onBlur={() => setFocusedField("")}
+                      error={errors.pincode}
+                      focused={focusedField === "pincode"}
                     />
                   </div>
                 </div>
 
+                {/* Payment Section */}
+                {/* ... Your existing payment section JSX ... */}
                 <div className="space-y-6">
-                  <h3 className="text-lg sm:text-xl font-semibold text-black flex items-center gap-2">
-                    <CreditCard className="h-5 w-5" /> Payment Method
-                  </h3>
+                  {/* ... Payment method radio buttons ... */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {["Cash on Delivery", "Online payment"].map((method) => (
                       <label
@@ -306,35 +334,31 @@ const PlaceOrder = () => {
                         </div>
                       </label>
                     ))}
-
-                    {formData.paymentMethod === "Online payment" && (
-                      <div className="col-span-1 md:col-span-2 p-4 sm:p-6 bg-white/10 rounded-xl border border-dashed border-yellow-600 shadow-inner mt-2 space-y-4">
-                        <h4 className="text-md font-semibold text-black">
-                          Select Online Payment Option
-                        </h4>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          {["PayPal", "Credit Card"].map((option) => (
-                            <button
-                              key={option}
-                              type="button"
-                              className={`w-full text-left px-4 py-3 rounded-xl bg-white/20 text-black font-medium shadow-md hover:bg-white/30 transition ${
-                                selectedOnlineOption === option
-                                  ? "ring-2 ring-yellow-500"
-                                  : ""
-                              }`}
-                              onClick={() => setSelectedOnlineOption(option)}
-                            >
-                              {option}
-                            </button>
-                          ))}
-                        </div>
-                        <p className="text-sm text-black/60">
-                          * These options are for preview. You can trigger
-                          respective gateways here.
-                        </p>
-                      </div>
-                    )}
                   </div>
+
+                  {formData.paymentMethod === "Online payment" && (
+                    <div className="col-span-1 md:col-span-2 p-4 sm:p-6 bg-white/10 rounded-xl border border-dashed border-yellow-600 shadow-inner mt-2 space-y-4">
+                      <h4 className="text-md font-semibold text-black">
+                        Select Online Payment Option
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {["PayPal", "Credit Card"].map((option) => (
+                          <button
+                            key={option}
+                            type="button"
+                            className={`w-full text-left px-4 py-3 rounded-xl bg-white/20 text-black font-medium shadow-md hover:bg-white/30 transition ${
+                              selectedOnlineOption === option
+                                ? "ring-2 ring-yellow-500"
+                                : ""
+                            }`}
+                            onClick={() => setSelectedOnlineOption(option)}
+                          >
+                            {option}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <button
@@ -355,7 +379,7 @@ const PlaceOrder = () => {
                 <h3 className="text-xl font-bold text-black">Order Summary</h3>
               </div>
               <div className="p-6">
-                <CartToral />
+                <CartTotal />
               </div>
             </div>
           </div>
@@ -365,4 +389,4 @@ const PlaceOrder = () => {
   );
 };
 
-export default PlaceOrder;
+export default memo(PlaceOrder);
