@@ -7,7 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-export default function Login({ token, setToken }) {
+const Login = ({ token, setToken }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [focusedInput, setFocusedInput] = useState(null);
   const [name, setName] = useState("");
@@ -16,72 +16,202 @@ export default function Login({ token, setToken }) {
   const [phone, setPhone] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [currentState, setCurrentState] = useState("Login");
-  // const [token , setToken] = useState(localStorage.getItem("token") || "");
+  // const [token , setToken] = useState("");
 
   const backendUrl = "https://naturehatch-website.onrender.com";
   const navigate = useNavigate();
 
-  const onSubmitHandler = async (e) => {
-    e.preventDefault();
-    try {
-      if (currentState === "Sign Up") {
-        if (password !== confirmPassword) {
-          toast.error("Passwords don't match!");
-          return;
-        }
+//  const onSubmitHandler = async (e) => {
+//   e.preventDefault();
 
-        const response = await axios.post(
-          `${backendUrl}/api/user/sign-up`,
-          {
-            name,
-            email,
-            phone: phone,
-            password,
-          },
-          {
-            withCredentials: true,
-          }
-        );
+//   try {
+//     if (currentState === "Sign Up") {
+//       // 1. Check passwords match
+//       if (password !== confirmPassword) {
+//         toast.error("Passwords don't match!");
+//         return;
+//       }
 
-        if (response.data.token) {
-          setToken(response.data.token);
-          localStorage.setItem("token", response.data.token);
-          toast.success("Registration successful!");
-          navigate("/");
-        } else {
-          toast.error(response.data.message || "Registration failed");
-        }
-      } else {
-        const response = await axios.post(
-          `${backendUrl}/api/user/login`,
-          { email, password },
-          {
-            withCredentials: true,
-            headers: token ? { Authorization: `Bearer ${token}` } : {},
-          }
-        );
+//       // 2. Make signup request
+//       const response = await axios.post(
+//         ${backendUrl}/api/user/sign-up,
+//         {
+//           name,
+//           email,
+//           phone,
+//           password,
+//         },
+//         {
+//           withCredentials: true,
+//         }
+//       );
 
-        if (response.data.token) {
-          const {  user } = response.data;
-          // setToken(response.data.token);  // Set token in state
-          localStorage.setItem("token", response.data.token); 
-          // Backup in localStorage
-          localStorage.setItem("user", JSON.stringify({
-    id: user.id,
-    email: user.email
-  }));
-          console.log("Login successful:", response);
-          toast.success("Login successful!");
-          navigate("/");
-        } else {
-          toast.error(response.data.message || "Login failed");
-        }
+//       // 3. Inspect response and handle logic
+//       const data = response.data;
+//       console.log("Sign Up Response:", data);
+
+//       if (data.token) {
+//         setToken(data.token);
+//         localStorage.setItem("token", data.token);
+//         toast.success("Registration successful!");
+//         navigate("/");
+//       } else if (data.success || response.status === 201) {
+//         // If backend returns a success flag or HTTP 201, treat as success
+//         toast.success(data.message || "Registration successful!");
+//         navigate("/login"); // Or "/" if auto-login not supported
+//       } else {
+//         toast.error(data.message || "Registration failed");
+//       }
+//     } else {
+//       // Login flow
+//       const loginResponse = await axios.post(
+//         ${backendUrl}/api/user/login,
+//         { email, password },
+//         {
+//           withCredentials: true,
+//           headers: token ? { Authorization: Bearer ${token} } : {},
+//         }
+//       );
+
+//       const loginData = loginResponse.data;
+//       console.log("Login Response:", loginData);
+
+//       if (loginData.token) {
+//         const { user } = loginData;
+//         localStorage.setItem("token", loginData.token);
+//         localStorage.setItem("user", JSON.stringify({
+//           id: user?.id,
+//           email: user?.email
+//         }));
+//         setToken(loginData.token);
+//         toast.success("Login successful!");
+//         navigate("/");
+//       } else {
+//         toast.error(loginData.message || "Login failed");
+//       }
+//     }
+//   } catch (error) {
+//     // Always log the error
+//     console.error(error.response?.data?.message || error.message);
+
+//     // User-friendly error handling
+//     const message = error.response?.data?.message || error.message || "Authentication failed";
+//     toast.error(message);
+//   }
+// };
+
+const onSubmitHandler = async (e) => {
+  e.preventDefault();
+
+  //   if (!setToken) {
+  //   console.error('setToken function is not available');
+  //   toast.error('An error occurred during authentication');
+  //   return;
+  // }
+
+  try {
+    if (currentState === "Sign Up") {
+      // 1. Validate passwords
+      if (password !== confirmPassword) {
+        toast.error("Passwords don't match!");
+        return;
       }
-    } catch (error) {
-      console.error(error.response?.data?.message || error.message);
-      toast.error(error.response?.data?.message || "Authentication failed");
+
+      if (password.length < 6) {
+        toast.error("Password must be at least 6 characters long");
+        return;
+      }
+
+      // 2. Make signup request
+      const response = await axios.post(
+        `${backendUrl}/api/user/sign-up`,
+        {
+          name,
+          email,
+          phone,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      const data = response.data;
+      console.log("Sign Up Response:", data);
+
+      // 3. Handle signup success scenarios
+      if (data.token) {
+        // Case 1: Backend returns token - Auto login
+        setToken(data.token);
+        localStorage.setItem("token", data.token);
+        
+        if (data.user) {
+          localStorage.setItem("user", JSON.stringify({
+            id: data.user.id,
+            email: data.user.email
+          }));
+        }
+        
+        toast.success("Registration successful!");
+        navigate("/");
+      } else if (data.success || response.status === 201) {
+        // Case 2: Backend indicates success but requires manual login
+        toast.success("Registration successful! Please log in.");
+        setCurrentState("Login");
+        setIsFlipped(false);
+        // Clear signup form
+        setPassword("");
+        setConfirmPassword("");
+      } else {
+        // Case 3: Unexpected response format
+        throw new Error("Invalid server response");
+      }
+    } else {
+      // Login flow
+      const loginResponse = await axios.post(
+        `${backendUrl}/api/user/login`,
+        { email, password },
+        {
+          withCredentials: true,
+        }
+      );
+
+      const loginData = loginResponse.data;
+      console.log("Login Response:", loginData);
+
+      if (!loginData || !loginData.token) {
+        throw new Error("Invalid login response");
+      }
+
+      // Store auth data
+      // setToken(loginData.token);
+      localStorage.setItem("token", loginData.token);
+      
+      if (loginData.user) {
+        localStorage.setItem("user", JSON.stringify({
+          id: loginData.user.id,
+          email: loginData.user.email
+        }));
+      }
+
+      toast.success("Login successful!");
+      navigate("/");
     }
-  };
+  } catch (error) {
+    console.error("Auth error:", error);
+
+    // Detailed error handling
+    let errorMessage = "Authentication failed";
+    
+    if (error.response?.data?.message) {
+      errorMessage = error.response.data.message;
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+
+    toast.error(errorMessage);
+  }
+};
 
   useEffect(() => {
     if (token) {
@@ -91,7 +221,7 @@ export default function Login({ token, setToken }) {
 
   // const handleLogin = async () => {
   //   try {
-  //     const response = await axios.post(`${backendUrl}/api/user/login`, {
+  //     const response = await axios.post(${backendUrl}/api/user/login, {
   //       email,
   //       password,
   //     });
@@ -605,3 +735,5 @@ export default function Login({ token, setToken }) {
     </div>
   );
 }
+
+export default Login;

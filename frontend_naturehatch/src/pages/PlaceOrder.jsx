@@ -146,7 +146,7 @@ const PlaceOrder = () => {
             "https://naturehatch-website.onrender.com/api/order/create-order",
             orderData,
             {
-              headers: { Authorization: Bearer `${token}` },
+              headers: { Authorization:` Bearer ${token}` },
             }
           );
 
