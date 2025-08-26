@@ -142,7 +142,7 @@ const onSubmitHandler = async (e) => {
       // 3. Handle signup success scenarios
       if (data.token) {
         // Case 1: Backend returns token - Auto login
-        setToken(data.token);
+        // setToken(data.token);
         localStorage.setItem("token", data.token);
         
         if (data.user) {

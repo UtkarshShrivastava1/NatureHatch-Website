@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback, memo } from "react";
+import React, { useContext, useState, useCallback, memo, useEffect } from "react";
 import { ShopContext } from "../context/ShopContext";
 import { useNavigate } from "react-router-dom";
 import CartTotal from "../components/CartTotal";
@@ -62,11 +62,26 @@ const InputField = memo(({
   </div>
 ));
 
+
+
+ 
+
+  
 const PlaceOrder = () => {
   const { setCartItem, cartItem, getCartAmount } = useContext(ShopContext);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
+    //  console.log(getCartAmount())
+    //  const quantities = Object.values(cartItem);
+    //  console.log(quantities[0])
+
+    // const products = Object.entries(cartItem).map(([productId,quantity, sizes]) => ({
+    //       productId,
+    //       // quantity: Object.values(sizes).reduce((a, b) => a + b,0)
+    //       quantity
+    //     }));
+    //     console.log(products)
 
   const [formData, setFormData] = useState({
     name: "",
@@ -120,15 +135,16 @@ const PlaceOrder = () => {
 
     if (validate()) {
       try {
-        const products = Object.entries(cartItem).map(([productId, sizes]) => ({
+        const products = Object.entries(cartItem).map(([productId,quantity, sizes]) => ({
           productId,
-          quantity: Object.values(sizes).reduce((a, b) => a + b, 0),
+          // quantity: Object.values(sizes).reduce((a, b) => a + b, 0),
+          quantity
         }));
 
         const totalAmount =
           getCartAmount() +
-          (formData.shippingMethod === "express" ? 50 : 0) +
-          Math.round(getCartAmount() * 0.18);
+          (formData.shippingMethod === "express" ? 50 : 10) ;
+          // Math.round(getCartAmount() * 0.18);
 
         const orderData = {
           userId: user?.id,
