@@ -69,6 +69,8 @@ import SearchBar from "./components/SearchBar";
 import Shop from "./pages/Shop";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ForgotPassword from "./pages/ForgetPassword";
+import ResetPassword from "./pages/ResetPassword";
 // import GoogleLoginPage from './pages/GoogleLoginPage';
 
 function App() {
@@ -95,6 +97,8 @@ function App() {
           <Route path="/place-order" element={<PlaceOrder />} />{" "}
           {/* Fixed typo */}
           <Route path="/orders" element={<Orders />} />
+          <Route path="/forget-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
         <Footer />
       </div>

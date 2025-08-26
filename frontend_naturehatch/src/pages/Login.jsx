@@ -16,202 +16,212 @@ const Login = ({ token, setToken }) => {
   const [phone, setPhone] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [currentState, setCurrentState] = useState("Login");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   // const [token , setToken] = useState("");
 
   const backendUrl = "https://naturehatch-website.onrender.com";
   const navigate = useNavigate();
 
-//  const onSubmitHandler = async (e) => {
-//   e.preventDefault();
+  //  const onSubmitHandler = async (e) => {
+  //   e.preventDefault();
 
-//   try {
-//     if (currentState === "Sign Up") {
-//       // 1. Check passwords match
-//       if (password !== confirmPassword) {
-//         toast.error("Passwords don't match!");
-//         return;
-//       }
+  //   try {
+  //     if (currentState === "Sign Up") {
+  //       // 1. Check passwords match
+  //       if (password !== confirmPassword) {
+  //         toast.error("Passwords don't match!");
+  //         return;
+  //       }
 
-//       // 2. Make signup request
-//       const response = await axios.post(
-//         ${backendUrl}/api/user/sign-up,
-//         {
-//           name,
-//           email,
-//           phone,
-//           password,
-//         },
-//         {
-//           withCredentials: true,
-//         }
-//       );
+  //       // 2. Make signup request
+  //       const response = await axios.post(
+  //         ${backendUrl}/api/user/sign-up,
+  //         {
+  //           name,
+  //           email,
+  //           phone,
+  //           password,
+  //         },
+  //         {
+  //           withCredentials: true,
+  //         }
+  //       );
 
-//       // 3. Inspect response and handle logic
-//       const data = response.data;
-//       console.log("Sign Up Response:", data);
+  //       // 3. Inspect response and handle logic
+  //       const data = response.data;
+  //       console.log("Sign Up Response:", data);
 
-//       if (data.token) {
-//         setToken(data.token);
-//         localStorage.setItem("token", data.token);
-//         toast.success("Registration successful!");
-//         navigate("/");
-//       } else if (data.success || response.status === 201) {
-//         // If backend returns a success flag or HTTP 201, treat as success
-//         toast.success(data.message || "Registration successful!");
-//         navigate("/login"); // Or "/" if auto-login not supported
-//       } else {
-//         toast.error(data.message || "Registration failed");
-//       }
-//     } else {
-//       // Login flow
-//       const loginResponse = await axios.post(
-//         ${backendUrl}/api/user/login,
-//         { email, password },
-//         {
-//           withCredentials: true,
-//           headers: token ? { Authorization: Bearer ${token} } : {},
-//         }
-//       );
+  //       if (data.token) {
+  //         setToken(data.token);
+  //         localStorage.setItem("token", data.token);
+  //         toast.success("Registration successful!");
+  //         navigate("/");
+  //       } else if (data.success || response.status === 201) {
+  //         // If backend returns a success flag or HTTP 201, treat as success
+  //         toast.success(data.message || "Registration successful!");
+  //         navigate("/login"); // Or "/" if auto-login not supported
+  //       } else {
+  //         toast.error(data.message || "Registration failed");
+  //       }
+  //     } else {
+  //       // Login flow
+  //       const loginResponse = await axios.post(
+  //         ${backendUrl}/api/user/login,
+  //         { email, password },
+  //         {
+  //           withCredentials: true,
+  //           headers: token ? { Authorization: Bearer ${token} } : {},
+  //         }
+  //       );
 
-//       const loginData = loginResponse.data;
-//       console.log("Login Response:", loginData);
+  //       const loginData = loginResponse.data;
+  //       console.log("Login Response:", loginData);
 
-//       if (loginData.token) {
-//         const { user } = loginData;
-//         localStorage.setItem("token", loginData.token);
-//         localStorage.setItem("user", JSON.stringify({
-//           id: user?.id,
-//           email: user?.email
-//         }));
-//         setToken(loginData.token);
-//         toast.success("Login successful!");
-//         navigate("/");
-//       } else {
-//         toast.error(loginData.message || "Login failed");
-//       }
-//     }
-//   } catch (error) {
-//     // Always log the error
-//     console.error(error.response?.data?.message || error.message);
+  //       if (loginData.token) {
+  //         const { user } = loginData;
+  //         localStorage.setItem("token", loginData.token);
+  //         localStorage.setItem("user", JSON.stringify({
+  //           id: user?.id,
+  //           email: user?.email
+  //         }));
+  //         setToken(loginData.token);
+  //         toast.success("Login successful!");
+  //         navigate("/");
+  //       } else {
+  //         toast.error(loginData.message || "Login failed");
+  //       }
+  //     }
+  //   } catch (error) {
+  //     // Always log the error
+  //     console.error(error.response?.data?.message || error.message);
 
-//     // User-friendly error handling
-//     const message = error.response?.data?.message || error.message || "Authentication failed";
-//     toast.error(message);
-//   }
-// };
+  //     // User-friendly error handling
+  //     const message = error.response?.data?.message || error.message || "Authentication failed";
+  //     toast.error(message);
+  //   }
+  // };
 
-const onSubmitHandler = async (e) => {
-  e.preventDefault();
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
 
-  //   if (!setToken) {
-  //   console.error('setToken function is not available');
-  //   toast.error('An error occurred during authentication');
-  //   return;
-  // }
+    //   if (!setToken) {
+    //   console.error('setToken function is not available');
+    //   toast.error('An error occurred during authentication');
+    //   return;
+    // }
 
-  try {
-    if (currentState === "Sign Up") {
-      // 1. Validate passwords
-      if (password !== confirmPassword) {
-        toast.error("Passwords don't match!");
-        return;
-      }
-
-      if (password.length < 6) {
-        toast.error("Password must be at least 6 characters long");
-        return;
-      }
-
-      // 2. Make signup request
-      const response = await axios.post(
-        `${backendUrl}/api/user/sign-up`,
-        {
-          name,
-          email,
-          phone,
-          password,
-        },
-        {
-          withCredentials: true,
+    try {
+      if (currentState === "Sign Up") {
+        // 1. Validate passwords
+        if (password !== confirmPassword) {
+          toast.error("Passwords don't match!");
+          return;
         }
-      );
 
-      const data = response.data;
-      console.log("Sign Up Response:", data);
-
-      // 3. Handle signup success scenarios
-      if (data.token) {
-        // Case 1: Backend returns token - Auto login
-        // setToken(data.token);
-        localStorage.setItem("token", data.token);
-        
-        if (data.user) {
-          localStorage.setItem("user", JSON.stringify({
-            id: data.user.id,
-            email: data.user.email
-          }));
+        if (password.length < 6) {
+          toast.error("Password must be at least 6 characters long");
+          return;
         }
-        
-        toast.success("Registration successful!");
-        navigate("/");
-      } else if (data.success || response.status === 201) {
-        // Case 2: Backend indicates success but requires manual login
-        toast.success("Registration successful! Please log in.");
-        setCurrentState("Login");
-        setIsFlipped(false);
-        // Clear signup form
-        setPassword("");
-        setConfirmPassword("");
+
+        // 2. Make signup request
+        const response = await axios.post(
+          `${backendUrl}/api/user/sign-up`,
+          {
+            name,
+            email,
+            phone,
+            password,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+
+        const data = response.data;
+        console.log("Sign Up Response:", data);
+
+        // 3. Handle signup success scenarios
+        if (data.token) {
+          // Case 1: Backend returns token - Auto login
+          // setToken(data.token);
+          localStorage.setItem("token", data.token);
+          console.log(data);
+
+          if (data.user) {
+            localStorage.setItem(
+              "user",
+              JSON.stringify({
+                id: data.user.id,
+                email: data.user.email,
+              })
+            );
+          }
+
+          toast.success("Registration successful!");
+          navigate("/");
+        } else if (data.success || response.status === 201) {
+          // Case 2: Backend indicates success but requires manual login
+          toast.success("Registration successful! Please log in.");
+          setCurrentState("Login");
+          setIsFlipped(false);
+          // Clear signup form
+          setPassword("");
+          setConfirmPassword("");
+        } else {
+          // Case 3: Unexpected response format
+          throw new Error("Invalid server response");
+        }
       } else {
-        // Case 3: Unexpected response format
-        throw new Error("Invalid server response");
-      }
-    } else {
-      // Login flow
-      const loginResponse = await axios.post(
-        `${backendUrl}/api/user/login`,
-        { email, password },
-        {
-          withCredentials: true,
+        // Login flow
+        const loginResponse = await axios.post(
+          `${backendUrl}/api/user/login`,
+          { email, password },
+          {
+            withCredentials: true,
+          }
+        );
+
+        const loginData = loginResponse.data;
+        console.log("Login Response:", loginData);
+
+        if (!loginData || !loginData.token) {
+          throw new Error("Invalid login response");
         }
-      );
 
-      const loginData = loginResponse.data;
-      console.log("Login Response:", loginData);
+        // Store auth data
+        // setToken(loginData.token);
+        localStorage.setItem("token", loginData.token);
 
-      if (!loginData || !loginData.token) {
-        throw new Error("Invalid login response");
+        if (loginData.user) {
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              id: loginData.user.id,
+              email: loginData.user.email,
+            })
+          );
+        }
+
+        toast.success("Login successful!");
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Auth error:", error);
+
+      // Detailed error handling
+      let errorMessage = "Authentication failed";
+
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
       }
 
-      // Store auth data
-      // setToken(loginData.token);
-      localStorage.setItem("token", loginData.token);
-      
-      if (loginData.user) {
-        localStorage.setItem("user", JSON.stringify({
-          id: loginData.user.id,
-          email: loginData.user.email
-        }));
-      }
-
-      toast.success("Login successful!");
-      navigate("/");
+      toast.error(errorMessage);
     }
-  } catch (error) {
-    console.error("Auth error:", error);
-
-    // Detailed error handling
-    let errorMessage = "Authentication failed";
-    
-    if (error.response?.data?.message) {
-      errorMessage = error.response.data.message;
-    } else if (error.message) {
-      errorMessage = error.message;
-    }
-
-    toast.error(errorMessage);
-  }
-};
+  };
 
   useEffect(() => {
     if (token) {
@@ -388,7 +398,7 @@ const onSubmitHandler = async (e) => {
                         }`}
                       >
                         <input
-                          type="password"
+                          type={showConfirmPassword ? "text" : "password"}
                           id="login-password"
                           placeholder="Password"
                           value={password}
@@ -398,6 +408,15 @@ const onSubmitHandler = async (e) => {
                           onBlur={handleBlur}
                           required
                         />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                          }
+                          className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+                        >
+                          {showConfirmPassword ? "🙈" : "👁️"}
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -419,7 +438,7 @@ const onSubmitHandler = async (e) => {
 
                     <div className="text-sm">
                       <a
-                        href="#"
+                        href="/forget-password"
                         className="font-medium text-green-600 hover:text-green-500"
                       >
                         Forgot password?
@@ -604,7 +623,7 @@ const onSubmitHandler = async (e) => {
                         }`}
                       >
                         <input
-                          type="password"
+                          type={showConfirmPassword ? "text" : "password"}
                           id="signup-confirm"
                           placeholder="Confirm Password"
                           className="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200"
@@ -614,6 +633,15 @@ const onSubmitHandler = async (e) => {
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           required
                         />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                          }
+                          className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+                        >
+                          {showConfirmPassword ? "🙈" : "👁️"}
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -734,6 +762,6 @@ const onSubmitHandler = async (e) => {
       </div>
     </div>
   );
-}
+};
 
 export default Login;
