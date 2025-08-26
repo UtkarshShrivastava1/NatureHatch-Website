@@ -3,6 +3,7 @@ const router = express.Router();
 const {userSignUp,userLogin,userLoginWithGoogle,addToCart,updateCart,updateDeliveryInfo, userVerifyEmail,getCart,clearItem,myOrders} = require("../controllers/userController");
 const authMiddleware = require("../middlewares/userAuthMiddleware");
 const User = require("../models/userModel");
+const nodemailer = require("nodemailer");
 
 
 router.post('/sign-up',userSignUp);
