@@ -5,6 +5,14 @@ import Title from '../components/Title';
 import ProductItem from '../components/ProductItem';
 
 const Shop = () => {
+
+  //Scroll to top----------
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  //--------------------
   const { products, search, showSearch } = useContext(ShopContext);
 
   const [showFilter, setShowFilter] = useState(false);

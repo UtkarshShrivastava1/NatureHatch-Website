@@ -108,6 +108,12 @@ const userSignUp = async (req, res) => {
     return res.status(201).json({
       message: "User saved successfully",
       token: authToken, // ✅ send this back
+       user: {
+    id: user._id,     // or user.id depending on your ORM
+    name: user.name,
+    email: user.email,
+    phone: user.phone, // optional
+  },
     });
 
     // return res.status(201).json({ message: "User saved successfully" });

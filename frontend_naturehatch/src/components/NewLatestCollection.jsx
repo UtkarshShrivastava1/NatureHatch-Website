@@ -4,6 +4,7 @@ import Title from './Title';
 import { motion } from 'framer-motion';
 import { Star, ShoppingBag, Heart, Leaf, Egg, ChefHat, Award, Sparkles, Clock, Check } from 'lucide-react';
 import ProductItem from './ProductItem';
+import { Link } from 'react-router-dom';
 
 const PremiumEggCollection = () => {
   const { products, addToCart } = useContext(ShopContext);
@@ -157,6 +158,7 @@ const PremiumEggCollection = () => {
             whileTap={{ scale: 0.95 }}
             className="relative inline-flex items-center px-8 py-3 overflow-hidden text-green-900 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 rounded-full font-medium shadow-lg hover:shadow-xl"
           >
+            <Link to={"/shop"}>
             <span className="relative z-10 flex items-center">
               View All Nature Hatch Eggs
               <motion.span 
@@ -167,6 +169,7 @@ const PremiumEggCollection = () => {
                 →
               </motion.span>
             </span>
+            </Link>
             <motion.span 
               className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400"
               animate={{ 
