@@ -242,6 +242,62 @@ const userLoginWithGoogle = async (req, res) => {
 };
 
 
+
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Generate OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    user.resetOtp = otp;
+    user.resetOtpExpires = Date.now() + 10 * 60 * 1000; // valid 10 minutes
+    await user.save();
+
+    // Send OTP via email
+    await transporter.sendMail({
+      from: process.env.GMAIL_USER,
+      to: user.email,
+      subject: "Password Reset OTP",
+      text: `Your OTP is ${otp}`,
+    });
+
+    res.json({ message: "OTP sent to email" });
+  } catch (error) {
+    console.error("Forgot Password Error:", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// ---------------- RESET PASSWORD ----------------
+const resetPassword = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+
+    const user = await User.findOne({
+      email,
+      resetOtp: otp,
+      resetOtpExpires: { $gt: Date.now() }, // not expired
+    });
+
+    if (!user) return res.status(400).json({ message: "Invalid or expired OTP" });
+
+    user.password = newPassword; // hash with pre-save hook
+    user.resetOtp = undefined;
+    user.resetOtpExpires = undefined;
+
+    await user.save();
+
+    res.json({ message: "Password has been reset successfully" });
+  } catch (error) {
+    console.error("Reset Password Error:", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
 const addToCart = async (req, res) => {
   try {
     const { productId, quantity } = req.body;
@@ -446,4 +502,6 @@ module.exports = {
   userVerifyEmail,
   getCart,
   myOrders,
+  forgotPassword,
+  resetPassword
 };
