@@ -16,6 +16,7 @@ const Product = () => {
 
   const [productData, setProductData] = useState(null);
   const [image, setImage] = useState("");
+  const [isAddedToCart, setIsAddedToCart] = useState(false);
 
   useEffect(() => {
     const selectedProduct = products.find((item) => item._id === productId);
@@ -24,6 +25,47 @@ const Product = () => {
       setImage(selectedProduct.imageURL);
     }
   }, [productId, products]);
+
+  // Check if product is already in cart on component mount
+  useEffect(() => {
+    if (productId) {
+      // Method 1: Using localStorage (for real applications)
+      // Uncomment these lines in your actual project:
+      // const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+      // const isInCart = cartItems.some(item => item.productId === productId);
+      // setIsAddedToCart(isInCart);
+      
+      // Method 2: Check with your existing cart context (recommended)
+      // If your ShopContext has a cart items array, use this instead:
+      // Example: const { cartItems } = useContext(ShopContext);
+      // const isInCart = cartItems.some(item => item._id === productId);
+      // setIsAddedToCart(isInCart);
+      
+      // For now, using in-memory storage (resets on reload)
+      const cartState = sessionStorage.getItem(`cart_${productId}`);
+      if (cartState === 'added') {
+        setIsAddedToCart(true);
+      }
+    }
+  }, [productId]);
+
+  const handleAddToCart = () => {
+    if (!isAddedToCart) {
+      addToCart(productData._id, 1);
+      setIsAddedToCart(true);
+      
+      // Method 1: For real applications, use localStorage:
+      // const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+      // const existingItem = cartItems.find(item => item.productId === productData._id);
+      // if (!existingItem) {
+      //   const updatedCart = [...cartItems, { productId: productData._id, quantity: 1 }];
+      //   localStorage.setItem('cartItems', JSON.stringify(updatedCart));
+      // }
+      
+      // Method 2: Using sessionStorage for demonstration (works in this environment)
+      sessionStorage.setItem(`cart_${productData._id}`, 'added');
+    }
+  };
 
   if (!productData) return <div className="opacity-0"></div>;
 
@@ -138,10 +180,14 @@ const Product = () => {
           </div>
 
           <button
-            onClick={() => addToCart(productData._id, 1)}
-            className="mt-6 bg-black text-white px-6 py-3 text-base sm:text-lg rounded-lg hover:bg-gray-800 transition-colors duration-300 w-full sm:w-auto cursor-pointer"
+            onClick={handleAddToCart}
+            className={`mt-6 px-6 py-3 text-base sm:text-lg rounded-lg transition-all duration-300 w-full sm:w-auto cursor-pointer ${
+              isAddedToCart
+                ? "bg-green-600 text-white hover:bg-green-700"
+                : "bg-black text-white hover:bg-gray-800"
+            }`}
           >
-            ADD TO CART
+            {isAddedToCart ? "ADDED TO CART ✓" : "ADD TO CART"}
           </button>
 
           <hr className="mt-8" />

@@ -39,7 +39,7 @@ const AboutUs = () => {
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, delay: 0.6 }}
-              className="inline-flex items-center bg-white text-green-700 px-6 py-3 rounded-full font-medium shadow-lg hover:bg-green-50 transition-colors"
+              className="inline-flex items-center bg-white text-green-700 px-6 py-3 rounded-full font-medium shadow-lg hover:bg-green-50 transition-colors cursor-pointer"
             >
               <Egg className="w-5 h-5 mr-2" />
               Get the Best Quality Nutritious Eggs
