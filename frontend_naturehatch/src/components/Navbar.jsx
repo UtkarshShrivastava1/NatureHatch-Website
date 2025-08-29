@@ -104,12 +104,12 @@ const Navbar = () => {
               onMouseEnter={() => setDropdownVisible('whychooseus')}
               onMouseLeave={() => setDropdownVisible(null)}>
             <NavLink to='/whychooseus' className={({ isActive }) => isActive ? 'text-green-700' : ''} >WHY CHOOSE US ?</NavLink>
-            {dropdownVisible === 'whychooseus' && (
+            {/* {dropdownVisible === 'whychooseus' && (
               <div className='absolute top-full left-0 bg-white shadow-md rounded-md w-42 py-2'>
                 <Link to='/whychooseus/WhyChoseUs' className={`block px-4 py-2 hover:bg-gray-200 ({ isActive }) => isActive ? 'text-green-700' : '' `}>Why Choose Us</Link>
                 <Link to='/whychooseus/fram-to-plate' className='block px-4 py-2 hover:bg-gray-200'>Farm to Plate</Link>
               </div>
-            )}
+            )} */}
           </li>
 
           <li><NavLink to='/about' className={({ isActive }) => isActive ? 'text-green-700' : ''} >ABOUT</NavLink></li>

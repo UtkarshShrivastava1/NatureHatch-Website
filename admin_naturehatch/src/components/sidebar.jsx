@@ -113,7 +113,7 @@ const Sidebar = () => {
 
       {/* User Profile */}
       <div className="mt-auto px-1 py-4">
-        <div
+        {/* <div
           className={`flex ${
             collapsed && !isMobile ? "justify-center" : "items-center"
           } gap-3 p-3 rounded-xl hover:bg-green-50 cursor-pointer w-full`}
@@ -136,7 +136,7 @@ const Sidebar = () => {
               <p className="text-xs text-gray-500">Administrator</p>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
 
       {/* Logout */}
