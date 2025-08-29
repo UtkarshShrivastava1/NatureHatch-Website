@@ -108,7 +108,7 @@ const Order = () => {
   <ul className="list-disc pl-5">
     {order.products.map((product, index) => (
       <li key={index}>
-        {product.productId?.name} (₹{product.productId?.price}) — Qty: {product.quantity}
+        {product.productId?.productname} (₹{product.productId?.price}) — Qty: {product.quantity}
       </li>
     ))}
   </ul>
