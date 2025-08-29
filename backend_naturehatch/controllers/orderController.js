@@ -346,7 +346,9 @@ const createOrder = async (req, res) => {
 // Other order handlers
 const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().populate('userId', 'name email');
+    const orders = await Order.find()
+    .populate('userId', 'name email')
+    .populate("products.productId", "name price");
     res.status(200).json(orders);
   } catch (error) {
     console.error('Error fetching orders:', error);
