@@ -11,6 +11,7 @@ const Order = () => {
     try {
       setLoading(true);
       const response = await axios.get(`${backendUrl}/api/order/get-all-orders`);
+      console.log(response)
       if (response.data) {
         setList(response.data);
         toast.success('Orders fetched successfully');
@@ -94,7 +95,7 @@ const Order = () => {
                   </td>
                   <td className="px-4 py-2">{order.paymentMethod}</td>
                   <td className="px-4 py-2">₹{order.totalAmount.toFixed(2)}</td>
-                  <td className="px-4 py-2">
+                  {/* <td className="px-4 py-2">
                     <ul className="list-disc pl-5">
                       {order.products.map((product) => (
                         <li key={product._id}>
@@ -102,7 +103,17 @@ const Order = () => {
                         </li>
                       ))}
                     </ul>
-                  </td>
+                  </td> */}
+                  <td className="px-4 py-2">
+  <ul className="list-disc pl-5">
+    {order.products.map((product, index) => (
+      <li key={index}>
+        {product.productId?.name} (₹{product.productId?.price}) — Qty: {product.quantity}
+      </li>
+    ))}
+  </ul>
+</td>
+
                   <td className="px-4 py-2">
                     <div className="flex items-center gap-2">
                       {/* <select
