@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-import { backendUrl } from "../App";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { use } from "react";
-import api from "../../../frontend_naturehatch/src/Services/api";
 import { useNavigate } from "react-router-dom";
 
 const Login = ({ setToken }) => {
