@@ -404,7 +404,7 @@ const updateOrderStatus = async (req, res) => {
     const { orderId } = req.params;
 
     // Validate status
-    const allowedStatuses = ['Pending', 'Confirmed', 'Dispatched', 'Delivered'];
+    const allowedStatuses = ['Pending','Confirmed', 'Shipped', 'Cancelled', 'Delivered'];
     if (!allowedStatuses.includes(status)) {
       return res.status(400).json({ message: 'Invalid status value' });
     }
