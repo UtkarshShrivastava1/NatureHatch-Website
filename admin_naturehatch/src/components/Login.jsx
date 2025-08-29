@@ -12,6 +12,7 @@ const Login = ({ setToken }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [focusedInput, setFocusedInput] = useState(null);
   const navigate = useNavigate();
+  const backendUrl = "https://naturehatch-website.onrender.com"
 
   const handleFocus = (inputId) => {
     setFocusedInput(inputId);
@@ -32,7 +33,7 @@ const Login = ({ setToken }) => {
       }
 
       const response = await axios.post(
-        "http://localhost:5000/api/admin/login",
+        `${backendUrl}/api/admin/login`,
         { username, password }
       );
    
