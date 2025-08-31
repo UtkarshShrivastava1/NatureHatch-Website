@@ -8,6 +8,7 @@ import Orders from "./pages/Order";
 import Login from "./components/Login";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AddBlog from "./pages/Blogs";
 
 export const backendUrl =
   import.meta.env.VITE_NODE_ENV === "production"
@@ -64,6 +65,14 @@ const App = () => {
                   element={
                     <ProtectedRoute token={token}>
                       <Orders token={token} />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/add-blogs"
+                  element={
+                    <ProtectedRoute token={token}>
+                      <AddBlog token={token} />
                     </ProtectedRoute>
                   }
                 />
