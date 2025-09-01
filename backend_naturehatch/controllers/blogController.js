@@ -115,10 +115,10 @@ const updateBlog = async (req, res) => {
     }
 };
 
-module.exports = 
+module.exports = {
     addBlog,
     getAllBlogs,
     getBlogById,
     deleteBlog,
     updateBlog
-;
+};
