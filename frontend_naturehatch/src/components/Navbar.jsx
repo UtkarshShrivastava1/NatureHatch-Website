@@ -90,13 +90,13 @@ const Navbar = () => {
               onMouseEnter={() => setDropdownVisible('blogs')}
               onMouseLeave={() => setDropdownVisible(null)}>
             <NavLink to='/blogs' className={({ isActive }) => isActive ? 'text-green-700' : ''} >BLOGS</NavLink>
-            {dropdownVisible === 'blogs' && (
+            {/* {dropdownVisible === 'blogs' && (
               <div className='absolute top-full left-0 bg-white shadow-md rounded-md w-40 py-2'>
                 <Link to='/blogs/lifestyle' className='block px-4 py-2 hover:bg-gray-200'>Life Style</Link>
                 <Link to='/blogs/egg-fact' className='block px-4 py-2 hover:bg-gray-200'>Egg Fact</Link>
                 <Link to='/blogs/recipes' className='block px-4 py-2 hover:bg-gray-200'>Recipes</Link>
               </div>
-            )}
+            )} */}
           </li>
 
           {/* Why Choose Us Dropdown */}
