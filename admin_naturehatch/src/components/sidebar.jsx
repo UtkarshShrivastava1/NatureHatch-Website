@@ -9,6 +9,8 @@ import {
   ShoppingBag,
   LogOut,
   User,
+  PlusCircle,
+  FileText,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -44,6 +46,8 @@ const Sidebar = () => {
     { name: "Add Items", path: "/add", icon: <Plus size={20} /> },
     { name: "List Items", path: "/list", icon: <ListOrdered size={20} /> },
     { name: "Orders", path: "/orders", icon: <ShoppingBag size={20} /> },
+    { name: "Add Blog", path: "/add-blogs", icon: <PlusCircle size={20} /> },
+    { name: "All Blogs", path: "/all-blogs", icon: <FileText size={20} /> },
   ];
 
   const SidebarContent = ({ isMobile = false }) => (

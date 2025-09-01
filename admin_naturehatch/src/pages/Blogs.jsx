@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const AddBlog = ({ token }) => {
   const [title, setTitle] = useState("");
@@ -12,6 +13,10 @@ const AddBlog = ({ token }) => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const backendUrl = "https://naturehatch-website.onrender.com";
+
+    useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   const handleFocus = (inputId) => {
     setFocusedInput(inputId);
