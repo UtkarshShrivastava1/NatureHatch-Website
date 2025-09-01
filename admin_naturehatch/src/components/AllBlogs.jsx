@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, User, Calendar, ArrowRight, Search, Filter, BookOpen, Tag, Eye, Edit, Trash2, X, Save } from 'lucide-react';
+import { Clock, User, Calendar, ArrowRight, Search, Filter, BookOpen, Tag, Eye, Edit, Trash2, X, Save, ArrowLeft } from 'lucide-react';
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -9,15 +9,16 @@ const Blogs = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [editingBlog, setEditingBlog] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [selectedBlog, setSelectedBlog] = useState(null);
 
   // Fetch blogs from API
   useEffect(() => {
     fetchBlogs();
   }, []);
 
-    useEffect(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, []);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   const fetchBlogs = async () => {
     try {
@@ -105,6 +106,14 @@ const Blogs = () => {
     }
   };
 
+  const handleReadMore = (blog) => {
+    setSelectedBlog(blog);
+  };
+
+  const closeBlogReader = () => {
+    setSelectedBlog(null);
+  };
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -150,38 +159,106 @@ const Blogs = () => {
     );
   }
 
-  return (
-    <div className="min-h-screen w-full bg-gray-50">
-      {/* Search and Filter Section */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search articles..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
-            </div>
-            <div className="relative">
-              <Filter className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent appearance-none bg-white"
+  // Blog Reader View
+  if (selectedBlog) {
+    return (
+      <div className="min-h-screen ">
+        {/* Header */}
+        <div className="sticky top-0  z-10 ">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <button
+                onClick={closeBlogReader}
+                className="flex items-center text-green-600 hover:text-green-700 transition-colors font-medium"
               >
-                {categories.map(category => (
-                  <option key={category} value={category}>
-                    {category === 'all' ? 'All Categories' : category}
-                  </option>
-                ))}
-              </select>
+                <ArrowLeft className="w-5 h-5 mr-2" />
+                Back to Blogs
+              </button>
+              <button
+                onClick={closeBlogReader}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <X className="w-6 h-6 text-gray-600" />
+              </button>
             </div>
           </div>
         </div>
+
+        {/* Blog Content */}
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
+          {/* Blog Header */}
+          <div className="mb-8">
+            <div className="mb-6">
+              <div className="inline-flex items-center bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
+                <Tag className="w-4 h-4 mr-2" />
+                {selectedBlog.category}
+              </div>
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
+                {selectedBlog.title}
+              </h1>
+            </div>
+
+            {/* Meta Information */}
+            <div className="flex flex-wrap items-center gap-6 text-gray-600 mb-8 pb-6 border-b border-gray-200">
+              <div className="flex items-center">
+                <User className="w-5 h-5 mr-2 text-green-600" />
+                <span className="font-medium">{selectedBlog.author}</span>
+              </div>
+              <div className="flex items-center">
+                <Calendar className="w-5 h-5 mr-2 text-green-600" />
+                <span>{formatDate(selectedBlog.createdAt)}</span>
+              </div>
+              <div className="flex items-center">
+                <Clock className="w-5 h-5 mr-2 text-green-600" />
+                <span>{selectedBlog.readTime}</span>
+              </div>
+              <div className="flex items-center">
+                <Eye className="w-5 h-5 mr-2 text-green-600" />
+                <span>{selectedBlog.views} views</span>
+              </div>
+            </div>
+
+            {/* Featured Image */}
+            <div className="mb-10 rounded-xl overflow-hidden shadow-lg">
+              <img
+                src={selectedBlog.image}
+                alt={selectedBlog.title}
+                className="w-full h-64 md:h-96 object-cover"
+              />
+            </div>
+          </div>
+
+          {/* Blog Content */}
+          <div className="prose prose-lg max-w-none mb-12">
+            <div className="text-gray-800 leading-relaxed text-lg whitespace-pre-wrap">
+              {selectedBlog.content}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="mt-12 pt-8 border-t border-gray-200">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              <div className="text-gray-600">
+                <p className="mb-1">Published on {formatDate(selectedBlog.createdAt)}</p>
+                <p>Last updated on {formatDate(selectedBlog.updatedAt)}</p>
+              </div>
+              <button
+                onClick={closeBlogReader}
+                className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Blogs
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen w-full bg-gray-50">
+      <div className="container mx-auto px-4 py-8">
 
         {/* Blog Grid */}
         {filteredBlogs.length === 0 ? (
@@ -231,6 +308,16 @@ const Blogs = () => {
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
+
+                  {/* Read More Overlay */}
+                  <div 
+                    className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center cursor-pointer"
+                    onClick={() => handleReadMore(blog)}
+                  >
+                    <div className="bg-white rounded-full p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <BookOpen className="w-6 h-6 text-green-600" />
+                    </div>
+                  </div>
                 </div>
 
                 <div className="p-6">
@@ -245,7 +332,10 @@ const Blogs = () => {
                     </div>
                   </div>
 
-                  <h2 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors line-clamp-2">
+                  <h2 
+                    className="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors line-clamp-2 cursor-pointer"
+                    onClick={() => handleReadMore(blog)}
+                  >
                     {blog.title}
                   </h2>
 
@@ -264,7 +354,10 @@ const Blogs = () => {
                     </div>
                   </div>
 
-                  <button className="mt-4 text-green-600 font-medium flex items-center group-hover:text-green-700 transition-colors">
+                  <button
+                    onClick={() => handleReadMore(blog)}
+                    className="mt-4 text-green-600 font-medium flex items-center group-hover:text-green-700 transition-colors hover:translate-x-1 transform duration-200"
+                  >
                     Read More
                     <ArrowRight className="w-4 h-4 ml-1" />
                   </button>
@@ -302,8 +395,7 @@ const EditBlogModal = ({ blog, onSave, onClose }) => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setLoading(true);
     
     await onSave(blog._id, {
@@ -369,14 +461,12 @@ const EditBlogModal = ({ blog, onSave, onClose }) => {
 
           <div className="flex gap-4 justify-end">
             <button
-              type="button"
               onClick={onClose}
               className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
             >
               Cancel
             </button>
             <button
-              type="button"
               onClick={handleSubmit}
               disabled={loading}
               className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 flex items-center"
